@@ -19,6 +19,7 @@ body {
 
 h1 {
   margin: 0;
+  text-align: center;
   -webkit-touch-callout: none; /* iOS Safari */
   -webkit-user-select: none; /* Safari */
   -khtml-user-select: none; /* Konqueror HTML */
@@ -35,7 +36,7 @@ h1 {
   width: 100%;
   margin: 0 auto;
   position: fixed;
-  bottom: 94px;
+  bottom: 18vh;
 }
 
 .arrows div {
@@ -45,24 +46,29 @@ h1 {
   padding: 6px 10px;
   border-radius: 2px;
   margin: 0 36px;
+  cursor: pointer;
 }
 
+.instructions {
+  width: 100%;
+  position: absolute;
+  bottom: 10vh;
+  font-size: 10px;
+  text-align: center;
+  color: #dcdcdc;
+}
 
-@media screen and (min-width: 320px) and (max-width: 767px) {
-  .arrows {
-    justify-content: space-between;
+@media (max-width: 811px) {
+  .instructions {
+    display: none;
   }
 }
-
-@media screen and (min-width: 320px) and (max-width: 767px) and (orientation: portrait) {
-  html {
-    transform: rotate(-90deg);
-    transform-origin: left top;
-    width: 100vh;
-    height: 100vw;
-    overflow-x: hidden;
-    position: absolute;
-    top: 100%;
-    left: 0;
+@media (max-width: 430px) {
+  h1 {
+    padding: 40px;
+  }
+  .arrows {
+    justify-content: space-between;
+    font-size: 12px;
   }
 }
