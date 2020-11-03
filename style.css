@@ -20,13 +20,6 @@ body {
 h1 {
   margin: 0;
   text-align: center;
-  -webkit-touch-callout: none; /* iOS Safari */
-  -webkit-user-select: none; /* Safari */
-  -khtml-user-select: none; /* Konqueror HTML */
-  -moz-user-select: none; /* Old versions of Firefox */
-  -ms-user-select: none; /* Internet Explorer/Edge */
-  user-select: none; /* Non-prefixed version, currently
-                      supported by Chrome, Edge, Opera and Firefox */
 }
 
 .arrows {
@@ -56,6 +49,16 @@ h1 {
   font-size: 12px;
   text-align: center;
   color: #dcdcdc;
+}
+
+h1, .arrows div, .instructions {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently
+                      supported by Chrome, Edge, Opera and Firefox */
 }
 
 @media (max-width: 811px) {
