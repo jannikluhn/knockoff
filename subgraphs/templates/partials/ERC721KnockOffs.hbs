@@ -1,0 +1,19 @@
+  - kind: ethereum/contract
+    name: ERC721KnockOffs
+    network: {{network}}
+    source:
+      address: "{{address}}"
+      abi: ERC721KnockOffs
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - PairCreated
+      abis:
+        - name: ERC721KnockOffs
+          file: ../abis/ERC721KnockOffs.json
+      eventHandlers:
+        - event: Minted(address,uint256,address,uint256,uint64)
+          handler: handleMinted
+      file: ../src/mapping.ts

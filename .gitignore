@@ -1,0 +1,10 @@
+**/node_modules
+
+**/.env
+
+contracts/artifacts
+contracts/cache
+
+subgraphs/build
+
+.vscode

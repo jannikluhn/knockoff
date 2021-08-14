@@ -1,0 +1,19 @@
+{
+  "name": "knockoff-subgraphs",
+  "license": "UNLICENSED",
+  "scripts": {
+    "precodegen": "hbs --data datasources.json -e yaml subgraph.handlebars",
+    "codegen": "graph codegen",
+    "build": "graph build",
+    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ jannikluhn/knockoffs",
+    "create-local": "graph create --node http://localhost:8020/ jannikluhn/knockoffs",
+    "remove-local": "graph remove --node http://localhost:8020/ jannikluhn/knockoffs",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 jannikluhn/knocknoffs"
+  },
+  "dependencies": {
+    "@graphprotocol/graph-cli": "0.21.1",
+    "@graphprotocol/graph-ts": "0.20.0",
+    "handlebars": "^4.7.7",
+    "hbs-cli": "^1.4.0"
+  }
+}
