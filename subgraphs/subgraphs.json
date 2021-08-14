@@ -1,22 +1,22 @@
 {
   "subgraphs": {
     "rinkeby": {
-      "network": "rinkeby",
       "dataSources": [
         {
           "partial": "ERC721KnockOffs",
           "context": {
+            "network": "rinkeby",
             "address": "0x6ed8558310F5236df59a021913313f8fb86c70F7"
           }
         }
       ]
     },
     "goerli": {
-      "network": "goerli",
       "dataSources": [
         {
           "partial": "ERC721KnockOffs",
           "context": {
+            "network": "goerli",
             "address": "0xe62e83aB3DC95Ac696ad3fa0bf16d4F93c6bbBc9"
           }
         }

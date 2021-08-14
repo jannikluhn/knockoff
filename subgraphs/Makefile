@@ -13,10 +13,15 @@ SUBGRAPH_DIRS = $(addprefix ${BUILD_DIR}/, ${NETWORKS})
 
 
 .DELETE_ON_ERROR:
+.SECONDARY:
 
 
 build: $(addprefix ${BUILD_DIR}/, $(addsuffix /build/.dirstamp, ${NETWORKS}))
 codegen: $(addprefix ${BUILD_DIR}/, $(addsuffix /generated/.dirstamp, ${NETWORKS}))
+
+${BUILD_DIR}/%/deployed: ${BUILD_DIR}/%/generated/.dirstamp ${BUILD_DIR}/%/subgraph.yaml ${BUILD_DIR}/%/schema.graphql
+	cd $(dir $@) && graph deploy --product hosted-service --node https://api.thegraph.com/deploy/ jannikluhn/knockoffs-$*
+	touch $@
 
 ${BUILD_DIR}/%/build/.dirstamp: ${BUILD_DIR}/%/generated/.dirstamp ${BUILD_DIR}/%/subgraph.yaml ${BUILD_DIR}/%/src/.dirstamp ${BUILD_DIR}/%/schema.graphql
 	graph build -o $(dir $@) $(word 2,$^)
