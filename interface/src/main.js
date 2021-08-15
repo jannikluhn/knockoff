@@ -5,6 +5,8 @@ import { setupFormulate } from "./formulate.js";
 import { setupVuex, store } from "./vuex.js";
 import { setupApollo, apolloProvider } from "./apollo.js";
 
+import "tailwindcss/tailwind.css";
+
 Vue.config.productionTip = false;
 setupFormulate();
 setupVuex();
