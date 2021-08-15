@@ -5,40 +5,58 @@ SUBGRAPH_TEMPLATE_FILE ?= ${TEMPLATE_DIR}/subgraph.hbs
 TEMPLATE_PARTIALS_DIR ?= ${TEMPLATE_DIR}/partials
 SRC_DIR ?= src
 ABI_DIR ?= abis
+SCHEMA_FILE ?= schema.graphql
 
 NETWORKS ?= $(shell jq .subgraphs subgraphs.json | jq -r 'keys[]')
 
-SUBGRAPH_JSON_FILES = $(addsuffix .json, $(addprefix ${BUILD_DIR}/subgraph-, ${NETWORKS}))
-SUBGRAPH_YAML_FILES = $(addsuffix .yaml, $(addprefix ${BUILD_DIR}/subgraph-, ${NETWORKS}))
-
-${BUILD_DIR}/build-%: ${BUILD_DIR}/generated-%
-	graph build -o ${BUILD_DIR}/build-$* ${BUILD_DIR}/subgraph-$*.yaml
+SUBGRAPH_DIRS = $(addprefix ${BUILD_DIR}/, ${NETWORKS})
 
 
-${BUILD_DIR}/generated-%: ${BUILD_DIR}/subgraph-%.yaml ${SRC_DIR}/* ${ABI_DIR}/*
-	graph codegen -o ${BUILD_DIR}/generated-$* $<
+.DELETE_ON_ERROR:
+.SECONDARY:
 
 
-subgraph-yaml: subgraph-json ${SUBGRAPH_YAML_FILES}
+deploy: $(addprefix ${BUILD_DIR}/, $(addsuffix /deployed, ${NETWORKS}))
+build: $(addprefix ${BUILD_DIR}/, $(addsuffix /build/.dirstamp, ${NETWORKS}))
+codegen: $(addprefix ${BUILD_DIR}/, $(addsuffix /generated/.dirstamp, ${NETWORKS}))
+subgraphs: $(addprefix ${BUILD_DIR}/, $(addsuffix /subgraph.yaml, ${NETWORKS}))
 
+${BUILD_DIR}/%/deployed: ${BUILD_DIR}/%/generated/.dirstamp ${BUILD_DIR}/%/subgraph.yaml ${BUILD_DIR}/%/schema.graphql
+	cd $(dir $@) && graph deploy --product hosted-service --node https://api.thegraph.com/deploy/ jannikluhn/knockoffs-$*
+	touch $@
 
-${BUILD_DIR}/subgraph-%.yaml: ${BUILD_DIR}/subgraph-%.json ${SUBGRAPH_TEMPLATE_FILE} ${TEMPLATE_PARTIALS_DIR}/*
+${BUILD_DIR}/%/build/.dirstamp: ${BUILD_DIR}/%/generated/.dirstamp ${BUILD_DIR}/%/subgraph.yaml ${BUILD_DIR}/%/src/.dirstamp ${BUILD_DIR}/%/schema.graphql
+	graph build -o $(dir $@) $(word 2,$^)
+	touch $@
+
+${BUILD_DIR}/%/generated/.dirstamp: ${BUILD_DIR}/%/subgraph.yaml ${BUILD_DIR}/%/schema.graphql ${BUILD_DIR}/%/src/.dirstamp ${BUILD_DIR}/%/abis/.dirstamp
+	graph codegen -o $(dir $@) $<
+	touch $@
+
+${BUILD_DIR}/%/abis/.dirstamp: ${ABI_DIR}/* | ${BUILD_DIR}/%
+	cp -r ${ABI_DIR} $(dir $@)
+	touch $@
+
+${BUILD_DIR}/%/src/.dirstamp: ${SRC_DIR}/* | ${BUILD_DIR}/%
+	cp -r ${SRC_DIR} ${BUILD_DIR}/$*
+	touch $@
+
+${BUILD_DIR}/%/schema.graphql: ${SCHEMA_FILE} | ${BUILD_DIR}/%
+	cp ${SCHEMA_FILE} $@
+
+${BUILD_DIR}/%/subgraph.yaml: ${BUILD_DIR}/%/subgraph.json ${SUBGRAPH_TEMPLATE_FILE} ${TEMPLATE_PARTIALS_DIR}/*
 	npx hbs --data $< ${SUBGRAPH_TEMPLATE_FILE} \
 		-P ${TEMPLATE_PARTIALS_DIR}/*  \
 		-e yaml  \
 		-s  \
-	> $@
+	> $@.tmp
+	cmp -s $@.tmp $@ || mv $@.tmp $@
 
-
-subgraph-json: ${SUBGRAPH_JSON_FILES}
-
-
-$(SUBGRAPH_JSON_FILES): ${BUILD_DIR}/subgraph-%.json: ${SUBGRAPHS_FILE} | ${BUILD_DIR}
+${BUILD_DIR}/%/subgraph.json: ${SUBGRAPHS_FILE} | ${BUILD_DIR}/%
 	jq .subgraphs.$* ${SUBGRAPHS_FILE} > $@
 
-
-${BUILD_DIR}:
-	mkdir ${BUILD_DIR}
+${SUBGRAPH_DIRS}: ${BUILD_DIR}/%: ${SUBGRAPHS_FILE}
+	mkdir -p $@
 
 clean:
 	rm -rf ${BUILD_DIR}

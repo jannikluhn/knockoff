@@ -4,16 +4,17 @@
     source:
       address: "{{address}}"
       abi: ERC721KnockOffs
+      startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
       language: wasm/assemblyscript
       entities:
-        - PairCreated
+        - Original
       abis:
         - name: ERC721KnockOffs
-          file: ../abis/ERC721KnockOffs.json
+          file: ./abis/ERC721KnockOffs.json
       eventHandlers:
         - event: Minted(address,uint256,address,uint256,uint64)
           handler: handleMinted
-      file: ../src/mapping.ts
+      file: ./src/mapping.ts
