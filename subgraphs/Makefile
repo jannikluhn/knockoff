@@ -16,6 +16,7 @@ SUBGRAPH_DIRS = $(addprefix ${BUILD_DIR}/, ${NETWORKS})
 .SECONDARY:
 
 
+deploy: $(addprefix ${BUILD_DIR}/, $(addsuffix /deployed, ${NETWORKS}))
 build: $(addprefix ${BUILD_DIR}/, $(addsuffix /build/.dirstamp, ${NETWORKS}))
 codegen: $(addprefix ${BUILD_DIR}/, $(addsuffix /generated/.dirstamp, ${NETWORKS}))
 subgraphs: $(addprefix ${BUILD_DIR}/, $(addsuffix /subgraph.yaml, ${NETWORKS}))
