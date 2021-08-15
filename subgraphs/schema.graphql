@@ -16,6 +16,7 @@ type ERC721OriginalToken @entity {
 type ERC721KnockOffToken @entity {
   id: ID!
   tokenID: BigInt!
-  original: ERC721OriginalToken
+  original: ERC721OriginalToken!
   serialNumber: Int!
+  timestamp: Int!
 }

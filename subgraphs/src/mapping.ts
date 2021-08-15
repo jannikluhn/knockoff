@@ -38,5 +38,6 @@ export function handleMinted(event: Minted): void {
     knockOffToken.tokenID = event.params.tokenID;
     knockOffToken.original = originalToken.id;
     knockOffToken.serialNumber = event.params.serialNumber.toI32();
+    knockOffToken.timestamp = event.block.timestamp.toI32();
     knockOffToken.save();
 }
