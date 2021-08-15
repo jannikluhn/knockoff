@@ -1,4 +1,5 @@
 import gql from "graphql-tag";
+import { INT32_MAX } from "./constants.js";
 
 function makeRecentERC721KnockOffQuery(chainID, pageSize, additionalArgs) {
   return {
@@ -8,7 +9,7 @@ function makeRecentERC721KnockOffQuery(chainID, pageSize, additionalArgs) {
           orderBy: timestamp
           orderDirection: desc
           first: $pageSize
-          where: { timestamp_gt: $lastTimestamp }
+          where: { timestamp_lt: $lastTimestamp }
         ) {
           id
           tokenID
@@ -20,7 +21,7 @@ function makeRecentERC721KnockOffQuery(chainID, pageSize, additionalArgs) {
     update: (data) => data.erc721KnockOffTokens,
     client: chainID,
     variables: {
-      lastTimestamp: 0,
+      lastTimestamp: INT32_MAX,
       pageSize,
     },
     ...additionalArgs,
