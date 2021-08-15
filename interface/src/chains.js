@@ -1,14 +1,6 @@
 import { ethers } from "ethers";
 
 export const chains = {
-  1: {
-    name: "Ethereum",
-    chainId: 1,
-    erc721KnockOffsAddress: "",
-    providerUrl:
-      "https://mainnet.infura.io/v3/cb47771bf3324acc895994de6752654b",
-    graphUrl: "",
-  },
   4: {
     name: "Rinkeby",
     chainId: 4,
