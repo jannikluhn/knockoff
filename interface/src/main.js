@@ -2,13 +2,16 @@ import Vue from "vue";
 import App from "./App.vue";
 
 import { setupFormulate } from "./formulate.js";
-import { setupVuex, store } from "./vuex";
+import { setupVuex, store } from "./vuex.js";
+import { setupApollo, apolloProvider } from "./apollo.js";
 
 Vue.config.productionTip = false;
 setupFormulate();
 setupVuex();
+setupApollo();
 
 new Vue({
   render: (h) => h(App),
   store,
+  apolloProvider,
 }).$mount("#app");
