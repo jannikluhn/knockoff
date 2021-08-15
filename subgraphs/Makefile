@@ -18,6 +18,7 @@ SUBGRAPH_DIRS = $(addprefix ${BUILD_DIR}/, ${NETWORKS})
 
 build: $(addprefix ${BUILD_DIR}/, $(addsuffix /build/.dirstamp, ${NETWORKS}))
 codegen: $(addprefix ${BUILD_DIR}/, $(addsuffix /generated/.dirstamp, ${NETWORKS}))
+subgraphs: $(addprefix ${BUILD_DIR}/, $(addsuffix /subgraph.yaml, ${NETWORKS}))
 
 ${BUILD_DIR}/%/deployed: ${BUILD_DIR}/%/generated/.dirstamp ${BUILD_DIR}/%/subgraph.yaml ${BUILD_DIR}/%/schema.graphql
 	cd $(dir $@) && graph deploy --product hosted-service --node https://api.thegraph.com/deploy/ jannikluhn/knockoffs-$*
@@ -47,7 +48,8 @@ ${BUILD_DIR}/%/subgraph.yaml: ${BUILD_DIR}/%/subgraph.json ${SUBGRAPH_TEMPLATE_F
 		-P ${TEMPLATE_PARTIALS_DIR}/*  \
 		-e yaml  \
 		-s  \
-	> $@
+	> $@.tmp
+	cmp -s $@.tmp $@ || mv $@.tmp $@
 
 ${BUILD_DIR}/%/subgraph.json: ${SUBGRAPHS_FILE} | ${BUILD_DIR}/%
 	jq .subgraphs.$* ${SUBGRAPHS_FILE} > $@
