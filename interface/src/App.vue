@@ -4,6 +4,13 @@
     <NFTView :nftTokenLocationID="nftTokenLocationID" />
     <Gallery />
 
+    <router-link to="/">Landing</router-link>
+    <router-link to="/gallery">Gallery</router-link>
+    <router-link to="/original/ethereum/0xaabbcc/123">Original</router-link>
+    <router-link to="/knockoff/ethereum/0xffeedd/321">Knock Off</router-link>
+
+    <router-view></router-view>
+
     <div
       class="p-6 max-w-sm mx-auto bg-white rounded-xl shadow-md flex items-center space-x-4"
     >
