@@ -6,8 +6,8 @@
 
     <router-link to="/">Landing</router-link>
     <router-link to="/gallery">Gallery</router-link>
-    <router-link to="/original">Original</router-link>
-    <router-link to="/knockoff">Knock Off</router-link>
+    <router-link to="/original/ethereum/0xaabbcc/123">Original</router-link>
+    <router-link to="/knockoff/ethereum/0xffeedd/321">Knock Off</router-link>
 
     <router-view></router-view>
 

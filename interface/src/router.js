@@ -20,12 +20,14 @@ const routes = [
     component: GalleryPage,
   },
   {
-    path: "/original",
+    path: "/original/:chain/:contractAddress/:tokenID",
     component: OriginalPage,
+    props: true,
   },
   {
-    path: "/knockoff",
+    path: "/knockoff/:chain/:contractAddress/:tokenID",
     component: KnockoffPage,
+    props: true,
   },
 ];
 
