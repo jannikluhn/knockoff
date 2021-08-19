@@ -33,4 +33,5 @@ type KnockOffToken @entity {
 
   mintTimestamp: Int!
   order: Int!
+  owner: Bytes!
 }

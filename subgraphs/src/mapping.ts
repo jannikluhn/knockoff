@@ -1,6 +1,6 @@
 import { log } from '@graphprotocol/graph-ts'
-import { Minted } from "../generated/ERC721KnockOffs/ERC721KnockOffs"
 import { OriginalContract, OriginalToken, KnockOffToken } from "../generated/schema"
+import { Minted, Transfer } from "../generated/ERC721KnockOffs/ERC721KnockOffs";
 
 export function handleMinted4(event: Minted): void {
     handleMinted(event, 4);
@@ -63,4 +63,24 @@ export function handleMinted(event: Minted, chainID: i32): void {
     knockOffToken.mintTimestamp = event.block.timestamp.toI32();
     knockOffToken.order = order;
     knockOffToken.save();
+}
+
+export function handleTransfer(event: Transfer): void {
+  let id = event.params.tokenId.toHex();
+  let token = KnockOffToken.load(id);
+  if (token == null) {
+    // For newly minted tokens, a Transfer event is emitted first, and only second a Minted
+    // event. We only index the token in the Minted event handler which also sets the first
+    // owner, so we don't have to do anything here.
+    log.debug("ignoring transfer event for unknown token ", [id]);
+    return;
+  }
+
+  log.info("transferring token [] from [] to []", [
+    event.params.tokenId.toString(),
+    token.owner.toHex(),
+    event.params.to.toHex(),
+  ]);
+  token.owner = event.params.to;
+  token.save();
 }
