@@ -14,6 +14,7 @@ struct Original {
 }
 
 contract ERC721KnockOffs is ERC721Enumerable {
+    // TODO: add minter
     event Minted(
         IERC721Metadata originalContract,
         uint256 originalTokenID,
@@ -60,7 +61,7 @@ contract ERC721KnockOffs is ERC721Enumerable {
         // Store the original as well as the knock off's serial number and mint the token.
         originals[_originalID] = original;
         serialNumbers[tokenID] = serialNumber;
-        _mint(receiver, tokenID);
+        _mint(receiver, tokenID); // TODO: use _safeMint
 
         emit Minted({
             originalContract: originalContract,
