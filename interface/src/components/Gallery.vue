@@ -11,6 +11,7 @@
 <script>
 import { apolloClients } from "../apollo.js";
 import { RecentERC721KnockOffFetcher } from "../recentERC721KnockOffFetcher.js";
+// import { fetchERC721Metadata } from "../erc721MetadataFetching.js";
 
 export default {
   name: "Gallery",
@@ -35,10 +36,23 @@ export default {
       this.requestInProgress = true;
       try {
         const moreTokens = await this.fetcher.fetchMore();
-        this.tokens.push(...moreTokens);
+
+        for (const token of moreTokens) {
+          this.tokens.push(token);
+          this.fetchERC721MetadataFor(token); // run in background
+        }
       } finally {
         this.requestInProgress = false;
       }
+    },
+
+    async fetchERC721MetadataFor() {
+      // TODO: token doesn't contain these fields at the moment
+      // const json = await fetchERC721Metadata(
+      //   token.chainID,
+      //   token.contractAddress,
+      //   token.tokenID
+      // );
     },
   },
 };
