@@ -20,4 +20,5 @@ type ERC721KnockOffToken @entity {
   original: ERC721OriginalToken!
   serialNumber: Int!
   timestamp: Int!
+  order: Int!
 }

@@ -47,11 +47,19 @@ export function handleMinted(event: Minted, chainID: i32): void {
         return;
     }
 
+    let order = 1;
+    let originalAsKnockOffID = event.params.originalTokenID.toHex();
+    let originalAsKnockOff = ERC721KnockOffToken.load(originalAsKnockOffID);
+    if (originalAsKnockOff != null) {
+        order = originalAsKnockOff.order + 1;
+    }
+
     log.info("creating new knock off with id {}", [knockOffTokenID]);
     knockOffToken = new ERC721KnockOffToken(knockOffTokenID);
     knockOffToken.tokenID = event.params.tokenID;
     knockOffToken.original = originalToken.id;
     knockOffToken.serialNumber = event.params.serialNumber.toI32();
     knockOffToken.timestamp = event.block.timestamp.toI32();
+    knockOffToken.order = order;
     knockOffToken.save();
 }
