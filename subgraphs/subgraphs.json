@@ -2,6 +2,7 @@
   "subgraphs": {
     "rinkeby": {
       "network": "rinkeby",
+      "chainID": 4,
       "dataSources": [
         {
           "partial": "ERC721KnockOffs",
@@ -14,6 +15,7 @@
     },
     "goerli": {
       "network": "goerli",
+      "chainID": 5,
       "dataSources": [
         {
           "partial": "ERC721KnockOffs",

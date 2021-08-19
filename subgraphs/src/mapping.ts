@@ -2,16 +2,25 @@ import { log } from '@graphprotocol/graph-ts'
 import { Minted } from "../generated/ERC721KnockOffs/ERC721KnockOffs"
 import { ERC721OriginalContract, ERC721OriginalToken, ERC721KnockOffToken } from "../generated/schema"
 
-export function handleMinted(event: Minted): void {
+export function handleMinted4(event: Minted): void {
+    handleMinted(event, 4);
+}
+
+export function handleMinted5(event: Minted): void {
+    handleMinted(event, 5);
+}
+
+export function handleMinted(event: Minted, chainID: i32): void {
     // create/update original contract
     log.debug("updating original contract", []);
-    let originalContractID = event.params.originalContract.toHex();
+    let originalContractID = chainID.toString() + "-" + event.params.originalContract.toHex();
     let originalContract = ERC721OriginalContract.load(originalContractID);
     if (originalContract == null) {
         log.info("creating new original contract with id {}", [originalContractID]);
         originalContract = new ERC721OriginalContract(originalContractID);
         originalContract.address = event.params.originalContract;
         originalContract.totalNumKnockOffs = 0;
+        originalContract.chainID = chainID;
     }
     originalContract.totalNumKnockOffs += 1;
     originalContract.save();

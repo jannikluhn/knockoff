@@ -3,5 +3,5 @@ schema:
   file: ./schema.graphql
 dataSources:
 {{#each dataSources network=network}}
-{{> (lookup this "partial") this.context network=../network}}
+{{> (lookup this "partial") this.context network=../network chainID=../chainID}}
 {{/each}}

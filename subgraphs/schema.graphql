@@ -1,5 +1,6 @@
 type ERC721OriginalContract @entity {
   id: ID!
+  chainID: Int!
   address: Bytes!
   totalNumKnockOffs: Int!
   knockedOffTokens: [ERC721OriginalToken!]! @derivedFrom(field: "contract")
