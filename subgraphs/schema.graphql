@@ -31,6 +31,6 @@ type KnockOffToken @entity {
   original: OriginalToken!
   serialNumber: Int!
 
-  timestamp: Int!
+  mintTimestamp: Int!
   order: Int!
 }

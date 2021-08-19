@@ -60,7 +60,7 @@ export function handleMinted(event: Minted, chainID: i32): void {
     knockOffToken.tokenID = event.params.tokenID;
     knockOffToken.original = originalToken.id;
     knockOffToken.serialNumber = event.params.serialNumber.toI32();
-    knockOffToken.timestamp = event.block.timestamp.toI32();
+    knockOffToken.mintTimestamp = event.block.timestamp.toI32();
     knockOffToken.order = order;
     knockOffToken.save();
 }
