@@ -1,6 +1,6 @@
 import { log } from '@graphprotocol/graph-ts'
 import { Minted } from "../generated/ERC721KnockOffs/ERC721KnockOffs"
-import { ERC721OriginalContract, ERC721OriginalToken, ERC721KnockOffToken } from "../generated/schema"
+import { OriginalContract, OriginalToken, KnockOffToken } from "../generated/schema"
 
 export function handleMinted4(event: Minted): void {
     handleMinted(event, 4);
@@ -14,10 +14,11 @@ export function handleMinted(event: Minted, chainID: i32): void {
     // create/update original contract
     log.debug("updating original contract", []);
     let originalContractID = chainID.toString() + "-" + event.params.originalContract.toHex();
-    let originalContract = ERC721OriginalContract.load(originalContractID);
+    let originalContract = OriginalContract.load(originalContractID);
     if (originalContract == null) {
         log.info("creating new original contract with id {}", [originalContractID]);
-        originalContract = new ERC721OriginalContract(originalContractID);
+        originalContract = new OriginalContract(originalContractID);
+        originalContract.type = "ERC721";
         originalContract.address = event.params.originalContract;
         originalContract.totalNumKnockOffs = 0;
         originalContract.chainID = chainID;
@@ -28,10 +29,10 @@ export function handleMinted(event: Minted, chainID: i32): void {
     // create/update original token
     log.debug("updating original token", []);
     let originalTokenID = event.params.originalContract.toHex() + "-" + event.params.originalTokenID.toHex();
-    let originalToken = ERC721OriginalToken.load(originalTokenID);
+    let originalToken = OriginalToken.load(originalTokenID);
     if (originalToken == null) {
         log.info("creating new original token with id {}", [originalTokenID]);
-        originalToken = new ERC721OriginalToken(originalTokenID);
+        originalToken = new OriginalToken(originalTokenID);
         originalToken.contract = originalContract.id;
         originalToken.tokenID = event.params.originalTokenID;
         originalToken.numKnockOffs = 0;
@@ -41,7 +42,7 @@ export function handleMinted(event: Minted, chainID: i32): void {
 
     log.debug("updating knock off token", []);
     let knockOffTokenID = event.params.tokenID.toHex();
-    let knockOffToken = ERC721KnockOffToken.load(knockOffTokenID);
+    let knockOffToken = KnockOffToken.load(knockOffTokenID);
     if (knockOffToken != null) {
         log.error("tried to insert duplicate knock off {}", [knockOffTokenID]);
         return;
@@ -49,13 +50,13 @@ export function handleMinted(event: Minted, chainID: i32): void {
 
     let order = 1;
     let originalAsKnockOffID = event.params.originalTokenID.toHex();
-    let originalAsKnockOff = ERC721KnockOffToken.load(originalAsKnockOffID);
+    let originalAsKnockOff = KnockOffToken.load(originalAsKnockOffID);
     if (originalAsKnockOff != null) {
         order = originalAsKnockOff.order + 1;
     }
 
     log.info("creating new knock off with id {}", [knockOffTokenID]);
-    knockOffToken = new ERC721KnockOffToken(knockOffTokenID);
+    knockOffToken = new KnockOffToken(knockOffTokenID);
     knockOffToken.tokenID = event.params.tokenID;
     knockOffToken.original = originalToken.id;
     knockOffToken.serialNumber = event.params.serialNumber.toI32();
