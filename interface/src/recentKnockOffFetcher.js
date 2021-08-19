@@ -3,23 +3,23 @@ import { INT32_MAX } from "./constants.js";
 
 const pageSize = 2;
 
-const recentERC721KnockOffQuery = gql`
-  query erc721KnockOffTokens($lastTimestamp: Int, $pageSize: Int) {
-    erc721KnockOffTokens(
-      orderBy: timestamp
+const recentKnockOffQuery = gql`
+  query knockOffTokens($lastTimestamp: Int, $pageSize: Int) {
+    knockOffTokens(
+      orderBy: mintTimestamp
       orderDirection: desc
       first: $pageSize
-      where: { timestamp_lt: $lastTimestamp }
+      where: { mintTimestamp_lt: $lastTimestamp }
     ) {
       id
       tokenID
       serialNumber
-      timestamp
+      mintTimestamp
     }
   }
 `;
 
-class RecentERC721KnockOffFetcher {
+class RecentKnockOffFetcher {
   constructor(clients) {
     this.clients = clients;
     this.chainIDs = [];
@@ -57,7 +57,7 @@ class RecentERC721KnockOffFetcher {
 
       const client = this.clients[chainID];
       const promise = client.query({
-        query: recentERC721KnockOffQuery,
+        query: recentKnockOffQuery,
         variables: {
           lastTimestamp: this.lastTimestamp[chainID],
           pageSize: pageSize,
@@ -73,13 +73,13 @@ class RecentERC721KnockOffFetcher {
     // if we already got everything).
     for (let i = 0; i < results.length; i++) {
       const chainID = queryPromiseChainIDs[i];
-      const tokens = results[i].data.erc721KnockOffTokens;
+      const tokens = results[i].data.knockOffTokens;
 
       if (tokens.length === 0) {
         this.done[chainID] = true;
       } else {
         const lastToken = tokens[tokens.length - 1];
-        this.lastTimestamp[chainID] = lastToken.timestamp;
+        this.lastTimestamp[chainID] = lastToken.mintTimestamp;
       }
     }
 
@@ -87,9 +87,9 @@ class RecentERC721KnockOffFetcher {
     // that haven't bee returned yet.
     let allTokens = [...this.tooOldTokens];
     for (const result of results) {
-      allTokens.push(...result.data.erc721KnockOffTokens);
+      allTokens.push(...result.data.knockOffTokens);
     }
-    allTokens.sort((t1, t2) => t2.timestamp - t1.timestamp);
+    allTokens.sort((t1, t2) => t2.mintTimestamp - t1.mintTimestamp);
 
     // Return all tokens, as long as we can guarantee that we haven't missed any more recent ones
     // (because different chains may have been fetched until different timestamps).
@@ -97,7 +97,7 @@ class RecentERC721KnockOffFetcher {
     let returnedTokens = [];
     const cutoff = this.allTokensFetchedUntil();
     for (const t of allTokens) {
-      if (t.timestamp >= cutoff) {
+      if (t.mintTimestamp >= cutoff) {
         returnedTokens.push(t);
       } else {
         this.tooOldTokens.push(t);
@@ -107,4 +107,4 @@ class RecentERC721KnockOffFetcher {
   }
 }
 
-export { RecentERC721KnockOffFetcher };
+export { RecentKnockOffFetcher };
