@@ -1,22 +1,37 @@
-type ERC721OriginalContract @entity {
+enum OriginalContractType {
+  ERC721
+}
+
+type OriginalContract @entity {
   id: ID!
+  type: OriginalContractType!
+
+  chainID: Int!
   address: Bytes!
+
   totalNumKnockOffs: Int!
-  knockedOffTokens: [ERC721OriginalToken!]! @derivedFrom(field: "contract")
+  knockedOffTokens: [OriginalToken!]! @derivedFrom(field: "contract")
 }
 
-type ERC721OriginalToken @entity {
+type OriginalToken @entity {
   id: ID!
-  contract: ERC721OriginalContract!
+
+  contract: OriginalContract!
   tokenID: BigInt!
+
   numKnockOffs: Int!
-  knockOffs: [ERC721KnockOffToken!]! @derivedFrom(field: "original")
+  knockOffs: [KnockOffToken!]! @derivedFrom(field: "original")
 }
 
-type ERC721KnockOffToken @entity {
+type KnockOffToken @entity {
   id: ID!
+
   tokenID: BigInt!
-  original: ERC721OriginalToken!
+
+  original: OriginalToken!
   serialNumber: Int!
-  timestamp: Int!
+
+  mintTimestamp: Int!
+  order: Int!
+  owner: Bytes!
 }

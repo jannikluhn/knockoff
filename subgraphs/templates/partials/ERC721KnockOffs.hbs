@@ -16,5 +16,7 @@
           file: ./abis/ERC721KnockOffs.json
       eventHandlers:
         - event: Minted(address,uint256,address,uint256,uint64)
-          handler: handleMinted
+          handler: handleMinted{{chainID}}
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
       file: ./src/mapping.ts

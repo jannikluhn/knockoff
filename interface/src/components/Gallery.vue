@@ -10,7 +10,7 @@
 
 <script>
 import { apolloClients } from "../apollo.js";
-import { RecentERC721KnockOffFetcher } from "../recentERC721KnockOffFetcher.js";
+import { RecentKnockOffFetcher } from "../recentKnockOffFetcher.js";
 // import { fetchERC721Metadata } from "../erc721MetadataFetching.js";
 
 export default {
@@ -24,7 +24,7 @@ export default {
   },
 
   created() {
-    this.fetcher = new RecentERC721KnockOffFetcher(apolloClients);
+    this.fetcher = new RecentKnockOffFetcher(apolloClients);
   },
 
   async mounted() {
