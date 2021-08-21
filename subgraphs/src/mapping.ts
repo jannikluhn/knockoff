@@ -8,6 +8,7 @@ import {
   KnockOffContract,
 } from "../generated/schema";
 import { OriginalContract } from "../generated/schema";
+import { OriginalToken } from "../generated/schema";
 
 export function handleMinted4(event: Minted): void {
   handleMinted(4, event);
@@ -35,17 +36,6 @@ function getKnockOffContractID(chainID: i32, contractAddress: Address): string {
 
 function getTokenID(contractID: string, tokenID: BigInt): string {
   return contractID + "-" + tokenID.toHex();
-}
-
-function originalToKnockOffID(originalID: string): string {
-  let idSplit = originalID.split("-");
-  if (idSplit.length != 3) {
-    log.critical("token ID {} has unexpected format", [originalID]);
-  }
-  if (idSplit[0] != "original") {
-    log.critical("token ID {} is not id of an original", [originalID]);
-  }
-  return "knockoff-" + idSplit[1] + "-" + idSplit[2];
 }
 
 function updateOriginalContract(chainID: i32, event: Minted): OriginalContract {
@@ -97,10 +87,7 @@ function updateOriginalToken(
 }
 
 function updateKnockOffContract(chainID: i32, event: Minted): KnockOffContract {
-  let knockOffContractID = getKnockOffContractID(
-    chainID,
-    event.params.originalContract
-  );
+  let knockOffContractID = getKnockOffContractID(chainID, event.address);
   log.debug("updating knock off contract with id {}", [knockOffContractID]);
   let knockOffContract = KnockOffContract.load(knockOffContractID);
 
@@ -121,8 +108,39 @@ function updateKnockOffContract(chainID: i32, event: Minted): KnockOffContract {
   return knockOffContract as KnockOffContract;
 }
 
+function getNextKnockOffOrder(
+  knockOffContract: KnockOffContract,
+  originalContract: OriginalContract,
+  originalToken: OriginalToken
+): i32 {
+  let originalAsKnockOffContractID = getKnockOffContractID(
+    knockOffContract.chainID,
+    originalContract.address as Address
+  );
+  let originalAsKnockOffContract = KnockOffContract.load(
+    originalAsKnockOffContractID
+  );
+
+  if (originalAsKnockOffContract != null) {
+    let originalAsKnockOffTokenID = getTokenID(
+      originalAsKnockOffContract.id,
+      originalToken.tokenID
+    );
+    let originalAsKnockOffToken = KnockOffToken.load(originalAsKnockOffTokenID);
+    if (originalAsKnockOffToken == null) {
+      log.critical("original {} is knock off, but not indexed", [
+        originalAsKnockOffToken.id,
+      ]);
+    }
+    return originalAsKnockOffToken.order + 1;
+  }
+
+  return 1; // if the original is not a knock off, the order is 1
+}
+
 function createKnockOffToken(
   knockOffContract: KnockOffContract,
+  originalContract: OriginalContract,
   originalToken: OriginalToken,
   event: Minted
 ): KnockOffToken | null {
@@ -136,13 +154,6 @@ function createKnockOffToken(
   }
   log.info("creating knockoff token with id {}", [knockOffTokenID]);
 
-  let order = 1;
-  let originalAsKnockOffID = originalToKnockOffID(originalToken.id);
-  let originalAsKnockOff = KnockOffToken.load(originalAsKnockOffID);
-  if (originalAsKnockOff != null) {
-    order = originalAsKnockOff.order + 1;
-  }
-
   knockOffToken = new KnockOffToken(knockOffTokenID);
   knockOffToken.contract = knockOffContract.id;
   knockOffToken.tokenID = event.params.tokenID;
@@ -151,7 +162,11 @@ function createKnockOffToken(
   knockOffToken.serialNumber = event.params.serialNumber.toI32();
 
   knockOffToken.mintTimestamp = event.block.timestamp.toI32();
-  knockOffToken.order = order;
+  knockOffToken.order = getNextKnockOffOrder(
+    knockOffContract,
+    originalContract,
+    originalToken
+  );
   knockOffToken.owner = event.params.receiver;
 
   knockOffToken.save();
@@ -163,7 +178,7 @@ export function handleMinted(chainID: i32, event: Minted): void {
   let originalContract = updateOriginalContract(chainID, event);
   let originalToken = updateOriginalToken(originalContract, event);
   let knockOffContract = updateKnockOffContract(chainID, event);
-  createKnockOffToken(knockOffContract, originalToken, event);
+  createKnockOffToken(knockOffContract, originalContract, originalToken, event);
 }
 
 export function handleTransfer(event: Transfer): void {
@@ -176,7 +191,6 @@ export function handleTransfer(event: Transfer): void {
     log.debug("ignoring transfer event for unknown token ", [id]);
     return;
   }
-
   log.info("transferring token [] from [] to []", [
     event.params.tokenId.toString(),
     token.owner.toHex(),
