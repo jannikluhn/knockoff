@@ -22,6 +22,8 @@
         <p class="text-gray-500">You have a new message!</p>
       </div>
     </div>
+    <Card />
+    <Button :isPrimary="true" />
   </div>
 </template>
 
@@ -29,6 +31,8 @@
 import SelectNFTForm from "./components/SelectNFTForm.vue";
 import NFTView from "./components/NFTView.vue";
 import Gallery from "./components/Gallery.vue";
+import Card from "./components/Card.vue";
+import Button from "./components/Button.vue";
 
 export default {
   name: "App",
@@ -36,6 +40,8 @@ export default {
     SelectNFTForm,
     NFTView,
     Gallery,
+    Card,
+    Button
   },
 
   data() {
