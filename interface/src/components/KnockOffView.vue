@@ -1,11 +1,15 @@
 <template>
   <div>
     {{ token }}
+    {{ metadata }}
+    <p v-if="tokenFetchingFailed">Token fetching failed</p>
+    <p v-if="metadataFetchingFailed">Metadata fetching failed</p>
   </div>
 </template>
 
 <script>
 import { fetchKnockOffToken } from "../knockOffFetching.js";
+import { fetchERC721Metadata } from "../erc721MetadataFetching.js";
 
 export default {
   name: "KnockOffView",
@@ -14,6 +18,8 @@ export default {
   data() {
     return {
       token: null,
+      metadata: null,
+
       requestCounter: 0,
       currentRequest: null,
     };
@@ -28,6 +34,12 @@ export default {
         return null;
       }
       return [this.chainID, this.contractAddress, this.tokenID];
+    },
+    tokenFetchingFailed() {
+      return !this.requestInProgress && !this.token;
+    },
+    metadataFetchingFailed() {
+      return !this.requestInProgress && !this.metadata;
     },
   },
 
@@ -44,6 +56,7 @@ export default {
     tokenChangeHandler() {
       if (!this.tokenInputProps) {
         this.token = null;
+        this.metadata = null;
       } else {
         this.fetch();
       }
@@ -54,19 +67,34 @@ export default {
       this.currentRequest = requestID;
       this.requestCounter += 1;
 
-      console.log("fetching");
-      const token = await fetchKnockOffToken(
-        this.chainID,
-        this.contractAddress,
-        this.tokenID
-      );
+      this.token = null;
+      this.metadata = null;
 
-      if (this.currentRequest !== requestID) {
-        return;
+      try {
+        const token = await fetchKnockOffToken(
+          this.chainID,
+          this.contractAddress,
+          this.tokenID
+        );
+        if (this.currentRequest !== requestID) {
+          return;
+        }
+        this.token = token;
+
+        if (this.token) {
+          const metadata = await fetchERC721Metadata(
+            token.contract.chainID,
+            token.contract.address,
+            token.tokenID
+          );
+          if (this.currentRequest !== requestID) {
+            return;
+          }
+          this.metadata = metadata;
+        }
+      } finally {
+        this.currentRequest = null;
       }
-
-      this.token = token;
-      this.currentRequest = null;
     },
   },
 };
