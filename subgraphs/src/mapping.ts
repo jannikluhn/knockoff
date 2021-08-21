@@ -5,6 +5,7 @@ import {
   OriginalContract,
   OriginalToken,
   KnockOffToken,
+  KnockOffContract,
 } from "../generated/schema";
 import { OriginalContract } from "../generated/schema";
 
@@ -28,8 +29,23 @@ function getOriginalContractID(chainID: i32, contractAddress: Address): string {
   return getContractID("original", chainID, contractAddress);
 }
 
+function getKnockOffContractID(chainID: i32, contractAddress: Address): string {
+  return getContractID("knockoff", chainID, contractAddress);
+}
+
 function getTokenID(contractID: string, tokenID: BigInt): string {
   return contractID + "-" + tokenID.toHex();
+}
+
+function originalToKnockOffID(originalID: string): string {
+  let idSplit = originalID.split("-");
+  if (idSplit.length != 3) {
+    log.critical("token ID {} has unexpected format", [originalID]);
+  }
+  if (idSplit[0] != "original") {
+    log.critical("token ID {} is not id of an original", [originalID]);
+  }
+  return "knockoff-" + idSplit[1] + "-" + idSplit[2];
 }
 
 function updateOriginalContract(chainID: i32, event: Minted): OriginalContract {
@@ -80,11 +96,37 @@ function updateOriginalToken(
   return originalToken as OriginalToken;
 }
 
+function updateKnockOffContract(chainID: i32, event: Minted): KnockOffContract {
+  let knockOffContractID = getKnockOffContractID(
+    chainID,
+    event.params.originalContract
+  );
+  log.debug("updating knock off contract with id {}", [knockOffContractID]);
+  let knockOffContract = KnockOffContract.load(knockOffContractID);
+
+  if (knockOffContract == null) {
+    log.info("creating new knock off contract with id {}", [
+      knockOffContractID,
+    ]);
+    knockOffContract = new KnockOffContract(knockOffContractID);
+    knockOffContract.type = "ERC721";
+    knockOffContract.address = event.address;
+    knockOffContract.chainID = chainID;
+    knockOffContract.totalNumTokens = 0;
+  }
+
+  knockOffContract.totalNumTokens += 1;
+  knockOffContract.save();
+
+  return knockOffContract as KnockOffContract;
+}
+
 function createKnockOffToken(
+  knockOffContract: KnockOffContract,
   originalToken: OriginalToken,
   event: Minted
 ): KnockOffToken | null {
-  let knockOffTokenID = event.params.tokenID.toHex();
+  let knockOffTokenID = getTokenID(knockOffContract.id, event.params.tokenID);
   let knockOffToken = KnockOffToken.load(knockOffTokenID);
   if (knockOffToken != null) {
     log.error("tried to create duplicate knock off with id {}", [
@@ -95,20 +137,23 @@ function createKnockOffToken(
   log.info("creating knockoff token with id {}", [knockOffTokenID]);
 
   let order = 1;
-  let originalAsKnockOffID = event.params.originalTokenID.toHex();
+  let originalAsKnockOffID = originalToKnockOffID(originalToken.id);
   let originalAsKnockOff = KnockOffToken.load(originalAsKnockOffID);
   if (originalAsKnockOff != null) {
     order = originalAsKnockOff.order + 1;
   }
 
-  log.info("creating new knock off with id {}", [knockOffTokenID]);
   knockOffToken = new KnockOffToken(knockOffTokenID);
+  knockOffToken.contract = knockOffContract.id;
   knockOffToken.tokenID = event.params.tokenID;
+
   knockOffToken.original = originalToken.id;
   knockOffToken.serialNumber = event.params.serialNumber.toI32();
+
   knockOffToken.mintTimestamp = event.block.timestamp.toI32();
   knockOffToken.order = order;
   knockOffToken.owner = event.params.receiver;
+
   knockOffToken.save();
 
   return knockOffToken;
@@ -117,7 +162,8 @@ function createKnockOffToken(
 export function handleMinted(chainID: i32, event: Minted): void {
   let originalContract = updateOriginalContract(chainID, event);
   let originalToken = updateOriginalToken(originalContract, event);
-  createKnockOffToken(originalToken, event);
+  let knockOffContract = updateKnockOffContract(chainID, event);
+  createKnockOffToken(knockOffContract, originalToken, event);
 }
 
 export function handleTransfer(event: Transfer): void {

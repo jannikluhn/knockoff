@@ -1,10 +1,10 @@
-enum OriginalContractType {
+enum TokenType {
   ERC721
 }
 
 type OriginalContract @entity {
   id: ID!
-  type: OriginalContractType!
+  type: TokenType!
 
   chainID: Int!
   address: Bytes!
@@ -23,9 +23,21 @@ type OriginalToken @entity {
   knockOffs: [KnockOffToken!]! @derivedFrom(field: "original")
 }
 
+type KnockOffContract @entity {
+  id: ID!
+  type: TokenType!
+
+  chainID: Int!
+  address: Bytes!
+
+  totalNumTokens: Int!
+  tokens: [KnockOffToken!]! @derivedFrom(field: "contract")
+}
+
 type KnockOffToken @entity {
   id: ID!
 
+  contract: KnockOffContract!
   tokenID: BigInt!
 
   original: OriginalToken!
