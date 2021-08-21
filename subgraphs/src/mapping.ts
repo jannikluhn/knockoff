@@ -1,4 +1,4 @@
-import { log } from "@graphprotocol/graph-ts";
+import { log, Address, BigInt } from "@graphprotocol/graph-ts";
 import { Minted, Transfer } from "../generated/ERC721KnockOffs/ERC721KnockOffs";
 import {
   OriginalContract,
@@ -7,18 +7,36 @@ import {
 } from "../generated/schema";
 
 export function handleMinted4(event: Minted): void {
-  handleMinted(event, 4);
+  handleMinted(4, event);
 }
 
 export function handleMinted5(event: Minted): void {
-  handleMinted(event, 5);
+  handleMinted(5, event);
 }
 
-export function handleMinted(event: Minted, chainID: i32): void {
+function getContractID(
+  prefix: string,
+  chainID: i32,
+  contractAddress: Address
+): string {
+  return prefix + "-" + chainID.toString() + "-" + contractAddress.toHex();
+}
+
+function getOriginalContractID(chainID: i32, contractAddress: Address): string {
+  return getContractID("original", chainID, contractAddress);
+}
+
+function getTokenID(contractID: string, tokenID: BigInt): string {
+  return contractID + "-" + tokenID.toHex();
+}
+
+export function handleMinted(chainID: i32, event: Minted): void {
   // create/update original contract
   log.debug("updating original contract", []);
-  let originalContractID =
-    chainID.toString() + "-" + event.params.originalContract.toHex();
+  const originalContractID = getOriginalContractID(
+    chainID,
+    event.params.originalContract
+  );
   let originalContract = OriginalContract.load(originalContractID);
   if (originalContract == null) {
     log.info("creating new original contract with id {}", [originalContractID]);
@@ -33,10 +51,10 @@ export function handleMinted(event: Minted, chainID: i32): void {
 
   // create/update original token
   log.debug("updating original token", []);
-  let originalTokenID =
-    event.params.originalContract.toHex() +
-    "-" +
-    event.params.originalTokenID.toHex();
+  const originalTokenID = getTokenID(
+    originalContract.id,
+    event.params.originalTokenID
+  );
   let originalToken = OriginalToken.load(originalTokenID);
   if (originalToken == null) {
     log.info("creating new original token with id {}", [originalTokenID]);
