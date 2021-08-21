@@ -1,6 +1,6 @@
 <template>
   <div>
-    <button @click="fetch">Fetch</button>
+    {{ token }}
   </div>
 </template>
 
@@ -9,23 +9,64 @@ import { fetchKnockOffToken } from "../knockOffFetching.js";
 
 export default {
   name: "KnockOffView",
-  params: ["chainID", "contractAddress", "tokenID"],
+  props: ["chainID", "contractAddress", "tokenID"],
 
   data() {
     return {
       token: null,
+      requestCounter: 0,
+      currentRequest: null,
     };
   },
 
+  computed: {
+    requestInProgress() {
+      return this.currentRequest !== null;
+    },
+    tokenInputProps() {
+      if (!this.chainID || !this.contractAddress || !this.tokenID) {
+        return null;
+      }
+      return [this.chainID, this.contractAddress, this.tokenID];
+    },
+  },
+
+  watch: {
+    tokenInputProps: {
+      immediate: true,
+      handler() {
+        this.tokenChangeHandler();
+      },
+    },
+  },
+
   methods: {
+    tokenChangeHandler() {
+      if (!this.tokenInputProps) {
+        this.token = null;
+      } else {
+        this.fetch();
+      }
+    },
+
     async fetch() {
+      const requestID = this.requestCounter;
+      this.currentRequest = requestID;
+      this.requestCounter += 1;
+
       console.log("fetching");
-      const result = await fetchKnockOffToken(
-        5,
-        "0xe62e83ab3dc95ac696ad3fa0bf16d4f93c6bbbc9",
-        "92655958585409148180944849191391429004953733686230621928396462488157034647999"
+      const token = await fetchKnockOffToken(
+        this.chainID,
+        this.contractAddress,
+        this.tokenID
       );
-      console.log(result);
+
+      if (this.currentRequest !== requestID) {
+        return;
+      }
+
+      this.token = token;
+      this.currentRequest = null;
     },
   },
 };
