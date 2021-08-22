@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
 import { contractFactories, interfaceIDs } from "./contracts.js";
-import errors from "./errors.js";
+import { throwError, errorCodes } from "./errors.js";
 import { providers } from "./chains.js";
 
 function makeNFTContractState() {
@@ -18,9 +18,9 @@ async function fetchOriginalContractState(chainID, contractAddress) {
 
   const provider = providers[chainID];
   if (provider === undefined) {
-    ethers.logger.throwError(
+    throwError(
       "no provider for chain with id " + chainID,
-      errors.UNEXPECTED_ERROR
+      errorCodes.UNEXPECTED_ERROR
     );
   }
 
@@ -77,9 +77,9 @@ async function fetchOriginalTokenState(
 
   const provider = providers[chainID];
   if (provider === undefined) {
-    ethers.logger.throwError(
+    throwError(
       "no provider for chain with id " + chainID,
-      errors.UNEXPECTED_ERROR
+      errorCodes.UNEXPECTED_ERROR
     );
   }
 
