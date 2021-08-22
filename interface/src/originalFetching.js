@@ -8,8 +8,6 @@ function makeNFTContractState() {
     hasCode: null,
     supportsIERC721: null,
     supportsIERC721Metadata: null,
-    erc721Symbol: null,
-    erc721Name: null,
   };
 }
 
@@ -71,28 +69,6 @@ async function fetchOriginalContractState(chainID, contractAddress) {
       throwError(
         errorCodes.CHAIN_ERROR,
         "failed to query contract for supported interfaces",
-        e
-      );
-    }
-  }
-
-  // fetch ERC721 specific data
-  if (state.supportsIERC721Metadata) {
-    const attachedContract = contractFactories["IERC721Metadata"].attach(
-      contractAddress
-    );
-    const contract = attachedContract.connect(provider);
-    try {
-      const [name, symbol] = await Promise.all([
-        contract.name(),
-        contract.symbol(),
-      ]);
-      state.erc721Name = name;
-      state.erc721Symbol = symbol;
-    } catch (e) {
-      throwError(
-        errorCodes.CHAIN_ERROR,
-        "failed to check contract name and symbol",
         e
       );
     }
