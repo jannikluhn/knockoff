@@ -36,12 +36,6 @@
 
 <script>
 import { chainNames } from "../chains.js";
-import {
-  makeNFTContractLocation,
-  getNFTContractLocationID,
-  makeNFTTokenLocation,
-  getNFTTokenLocationID,
-} from "../nft.js";
 
 export default {
   name: "SelectNFTForm",
@@ -56,58 +50,7 @@ export default {
   },
 
   methods: {
-    async submit() {
-      this.validating = true;
-
-      const nftContractLocation = makeNFTContractLocation(
-        this.form.chainID,
-        this.form.contractAddress
-      );
-      const nftContractLocationID = getNFTContractLocationID(
-        nftContractLocation
-      );
-      const nftTokenLocation = makeNFTTokenLocation(
-        nftContractLocationID,
-        this.form.tokenID
-      );
-      const nftTokenLocationID = getNFTTokenLocationID(nftTokenLocation);
-
-      if (!this.$store.state.nftContractLocations[nftContractLocationID]) {
-        this.$store.commit("insertNFTContract", nftContractLocation);
-      }
-
-      if (!this.$store.state.nftContractStates[nftContractLocationID]) {
-        try {
-          await this.$store.dispatch(
-            "fetchNFTContractState",
-            nftContractLocationID
-          );
-        } catch (e) {
-          this.formErrors = ["Failed to fetch state of contract."];
-          console.error(e);
-          this.validating = false;
-          return;
-        }
-      }
-
-      if (!this.$store.state.nftTokenLocations[nftTokenLocationID]) {
-        this.$store.commit("insertNFTToken", nftTokenLocation);
-      }
-
-      if (!this.$store.state.nftTokenStates[nftTokenLocationID]) {
-        try {
-          await this.$store.dispatch("fetchNFTTokenState", nftTokenLocationID);
-        } catch (e) {
-          this.formErrors = ["Failed to fetch token."];
-          console.error(e);
-          this.validating = false;
-          return;
-        }
-      }
-
-      this.validating = false;
-      this.$emit("submit", nftTokenLocationID);
-    },
+    async submit() {},
   },
 };
 </script>

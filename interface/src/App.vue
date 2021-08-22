@@ -1,7 +1,6 @@
 <template>
   <div id="app" class="px-5 bg-gray-50 sm:px-20 md:px-40 xl:px-52">
     <SelectNFTForm @submit="nftTokenLocationID = $event" />
-    <NFTView :nftTokenLocationID="nftTokenLocationID" />
     <Gallery />
 
     <router-link to="/">Landing</router-link>
@@ -16,7 +15,6 @@
 
 <script>
 import SelectNFTForm from "./components/SelectNFTForm.vue";
-import NFTView from "./components/NFTView.vue";
 import Gallery from "./components/Gallery.vue";
 import Card from "./components/Card.vue";
 
@@ -24,7 +22,6 @@ export default {
   name: "App",
   components: {
     SelectNFTForm,
-    NFTView,
     Gallery,
     Card,
   },

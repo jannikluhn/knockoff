@@ -93,7 +93,9 @@ export default {
           this.metadata = metadata;
         }
       } finally {
-        this.currentRequest = null;
+        if (this.currentRequest === requestID) {
+          this.currentRequest = null;
+        }
       }
     },
   },
