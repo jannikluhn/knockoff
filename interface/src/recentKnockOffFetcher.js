@@ -12,9 +12,18 @@ const recentKnockOffQuery = gql`
       where: { mintTimestamp_lt: $lastTimestamp }
     ) {
       id
+      contract {
+        id
+        type
+        chainID
+        address
+      }
+
       tokenID
       serialNumber
+      order
       mintTimestamp
+      owner
     }
   }
 `;
