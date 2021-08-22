@@ -1,6 +1,7 @@
 <template>
   <div>
     <p>Gallery</p>
+    <Card />
     <p>
       {{ tokens }}
     </p>
@@ -9,12 +10,17 @@
 </template>
 
 <script>
+import Card from "./Card.vue"
 import { apolloClients } from "../apollo.js";
 import { RecentKnockOffFetcher } from "../recentKnockOffFetcher.js";
 // import { fetchERC721Metadata } from "../erc721MetadataFetching.js";
 
 export default {
   name: "Gallery",
+
+  components: {
+    Card,
+  },
 
   data() {
     return {
