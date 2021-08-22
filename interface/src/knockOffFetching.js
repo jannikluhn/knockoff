@@ -37,7 +37,7 @@ function getKnockOffTokenID(chainID, contractAddress, tokenID) {
     "knockoff",
     chainID.toString(),
     ethers.utils.getAddress(contractAddress).toLowerCase(),
-    ethers.BigNumber.from(tokenID).toHexString(),
+    ethers.BigNumber.from(tokenID).toString(),
   ].join("-");
 }
 

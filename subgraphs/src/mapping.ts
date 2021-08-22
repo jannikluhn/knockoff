@@ -35,7 +35,7 @@ function getKnockOffContractID(chainID: i32, contractAddress: Address): string {
 }
 
 function getTokenID(contractID: string, tokenID: BigInt): string {
-  return contractID + "-" + tokenID.toHex();
+  return contractID + "-" + tokenID.toString();
 }
 
 function updateOriginalContract(chainID: i32, event: Minted): OriginalContract {
