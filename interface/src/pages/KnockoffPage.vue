@@ -15,6 +15,7 @@ import Artwork from "../components/Artwork.vue";
 import Header from "../components/Header.vue";
 import NFTDataTable from "../components/NFTDataTable.vue";
 import Button from "../components/Button.vue";
+import { pathSegmentToChainID } from "../chains";
 
 export default {
   name: "KnockoffPage",
@@ -26,5 +27,14 @@ export default {
     Button,
   },
   props: ["chain", "contractAddress", "tokenID"],
+
+  computed: {
+    chainID() {
+      return pathSegmentToChainID(this.chain);
+    },
+    unknownChain() {
+      return !this.chainID;
+    },
+  },
 };
 </script>
