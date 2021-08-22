@@ -9,7 +9,7 @@
     />
     <div class="px-4 py-3 flex items-center justify-between">
       <div class="">
-        <h2 class="font-extrabold italic uppercase text-xl mb-0.5">
+        <h2 class="font-extrabold italic uppercase text-xl mb-0.5 leading-5">
           The Coldest Sunset
         </h2>
         <p class="font-medium text-sm">
