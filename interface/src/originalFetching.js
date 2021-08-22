@@ -25,7 +25,16 @@ async function fetchOriginalContractState(chainID, contractAddress) {
   }
 
   // check if there's a contract at all
-  const code = await provider.getCode(contractAddress);
+  let code;
+  try {
+    code = await provider.getCode(contractAddress);
+  } catch (e) {
+    throwError(
+      errorCodes.CHAIN_ERROR,
+      "failed to query contract code for address " + contractAddress,
+      e
+    );
+  }
   if (code == "0x") {
     state.hasCode = false;
     return state;
@@ -35,12 +44,25 @@ async function fetchOriginalContractState(chainID, contractAddress) {
   // check which interfaces it supports
   const attachedContract = contractFactories["IERC165"].attach(contractAddress);
   const contract = attachedContract.connect(provider);
-  const [supportsIERC721, supportsIERC721Metadata] = await Promise.all([
-    contract.supportsInterface(interfaceIDs["IERC721"]),
-    contract.supportsInterface(interfaceIDs["IERC721Metadata"]),
-  ]);
-  state.supportsIERC721 = supportsIERC721;
-  state.supportsIERC721Metadata = supportsIERC721Metadata;
+  try {
+    const [supportsIERC721, supportsIERC721Metadata] = await Promise.all([
+      contract.supportsInterface(interfaceIDs["IERC721"]),
+      contract.supportsInterface(interfaceIDs["IERC721Metadata"]),
+    ]);
+    state.supportsIERC721 = supportsIERC721;
+    state.supportsIERC721Metadata = supportsIERC721Metadata;
+  } catch (e) {
+    if (e.code === ethers.errors.CALL_EXCEPTION) {
+      state.supportsIERC721 = false;
+      state.supportsIERC721Metadata = false;
+    } else {
+      throwError(
+        errorCodes.CHAIN_ERROR,
+        "failed to check contract for ERC721 interfaces",
+        e
+      );
+    }
+  }
 
   // fetch ERC721 specific data
   if (state.supportsIERC721Metadata) {
@@ -48,12 +70,20 @@ async function fetchOriginalContractState(chainID, contractAddress) {
       contractAddress
     );
     const contract = attachedContract.connect(provider);
-    const [name, symbol] = await Promise.all([
-      contract.name(),
-      contract.symbol(),
-    ]);
-    state.erc721Name = name;
-    state.erc721Symbol = symbol;
+    try {
+      const [name, symbol] = await Promise.all([
+        contract.name(),
+        contract.symbol(),
+      ]);
+      state.erc721Name = name;
+      state.erc721Symbol = symbol;
+    } catch (e) {
+      throwError(
+        errorCodes.CHAIN_ERROR,
+        "failed to check contract name and symbol",
+        e
+      );
+    }
   }
 
   return state;
@@ -102,11 +132,11 @@ async function fetchOriginalTokenState(
       if (e.code === ethers.errors.CALL_EXCEPTION) {
         exists = false;
       } else {
-        throw e;
+        throwError(errorCodes.CHAIN_ERROR, "failed to query token owner", e);
       }
+      state.owner = owner;
+      state.exists = exists;
     }
-    state.owner = owner;
-    state.exists = exists;
   }
 
   if (nftContractState.supportsIERC721Metadata) {
@@ -115,7 +145,11 @@ async function fetchOriginalTokenState(
     );
     const contract = attachedContract.connect(provider);
 
-    state.erc721URI = await contract.tokenURI(tokenID);
+    try {
+      state.erc721URI = await contract.tokenURI(tokenID);
+    } catch (e) {
+      throwError(errorCodes.CHAIN_ERROR, "failed to query metadata URI", e);
+    }
   }
 
   return state;
