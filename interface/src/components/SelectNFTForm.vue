@@ -5,31 +5,33 @@
     @input="formErrors = []"
     :form-errors="formErrors"
     #default="{ hasErrors }"
+    class="my-12"
   >
     <FormulateInput
       name="chainID"
       type="select"
       :options="chainSelectOptions"
-      label="Chain"
+      input-class="w-full sm:w-64 mt-2 px-4 py-1 rounded-full border-2 border-black font-medium capitalize"
     />
     <FormulateInput
       name="contractAddress"
       type="text"
       validation="required|address"
-      label="NFT Contract Address"
-      value="0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270"
+      placeholder="Enter NFT Contract Address"
+      input-class="w-full sm:w-64 mt-2 px-4 py-1 rounded-full border-2 border-black font-medium capitalize"
     />
     <FormulateInput
       name="tokenID"
       type="text"
       validation="required|tokenID"
-      label="Token ID"
-      value="4000000"
+      placeholder="Enter Token ID"
+      input-class="w-full sm:w-64 mt-2 px-4 py-1 rounded-full border-2 border-black font-medium capitalize"
     />
     <FormulateInput
       type="submit"
       name="Find NFT"
       :disabled="hasErrors || validating"
+      input-class="w-full sm:w-64 mt-2 px-4 py-1 rounded-full border-2 border-black text-white uppercase bg-black font-bold"
     />
   </FormulateForm>
 </template>

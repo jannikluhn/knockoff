@@ -23,7 +23,7 @@ export default {
     Artwork,
     Header,
     NFTDataTable,
-    Button
+    Button,
   },
   props: ["chain", "contractAddress", "tokenID"],
 };
