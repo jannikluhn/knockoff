@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" class="px-5 bg-gray-50 sm:px-20 md:px-40 xl:px-52">
     <SelectNFTForm @submit="nftTokenLocationID = $event" />
     <NFTView :nftTokenLocationID="nftTokenLocationID" />
     <Gallery />
@@ -10,20 +10,7 @@
     <router-link to="/knockoff/ethereum/0xffeedd/321">Knock Off</router-link>
 
     <router-view></router-view>
-
-    <div
-      class="p-6 max-w-sm mx-auto bg-white rounded-xl shadow-md flex items-center space-x-4"
-    >
-      <div class="flex-shrink-0">
-        <img class="h-12 w-12" src="/img/logo.svg" alt="ChitChat Logo" />
-      </div>
-      <div>
-        <div class="text-xl font-medium text-black">ChitChat</div>
-        <p class="text-gray-500">You have a new message!</p>
-      </div>
-    </div>
     <Card />
-    <Button :isPrimary="true" />
   </div>
 </template>
 
@@ -32,7 +19,6 @@ import SelectNFTForm from "./components/SelectNFTForm.vue";
 import NFTView from "./components/NFTView.vue";
 import Gallery from "./components/Gallery.vue";
 import Card from "./components/Card.vue";
-import Button from "./components/Button.vue";
 
 export default {
   name: "App",
@@ -41,7 +27,6 @@ export default {
     NFTView,
     Gallery,
     Card,
-    Button
   },
 
   data() {

@@ -1,10 +1,11 @@
 <template>
-<div>
+<div class="flex flex-col items-center py-8 xl:flex-row-reverse">
   <Artwork />
-  <Header />
-  <NFTDataTable />
-  <Button :isPrimary="true" />
-  <p>Original {{ chain }} {{ contractAddress }} {{ tokenID }}</p>
+  <div class="flex flex-col items-center xl:w-1/2 xl:px-3">
+    <Header />
+    <NFTDataTable />
+    <Button :isPrimary="true"/>
+  </div>
 </div>
 </template>
 
@@ -23,7 +24,5 @@ export default {
     NFTDataTable,
     Button
   },
-  
-  props: ["chain", "contractAddress", "tokenID"],
 };
 </script>

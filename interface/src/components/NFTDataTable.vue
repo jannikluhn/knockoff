@@ -1,24 +1,24 @@
 <template>
-    <table class="table-auto">
+    <table class="table-auto w-full my-4 mx-auto sm:w-52">
       <tr>
-        <td class="uppercase text-sm">chain</td>
-        <td class="font-medium">Ethereum</td>
+        <td class="uppercase text-xs text-left">chain</td>
+        <td class="font-medium capitalize text-xs text-right">Ethereum</td>
       </tr>
       <tr>
-        <td class="uppercase text-sm">contract address</td>
-        <td class="font-medium">123456789</td>
+        <td class="uppercase text-xs text-left">contract address</td>
+        <td class="font-medium text-xs text-right">12345678</td>
       </tr>
       <tr>
-        <td class="uppercase text-sm">token ID</td>
-        <td class="font-medium">12345678</td>
+        <td class="uppercase text-xs text-left">token ID</td>
+        <td class="font-medium text-xs text-right">12345678</td>
       </tr>
       <tr>
-        <td class="uppercase text-sm">owner</td>
-        <td class="font-medium">12345678</td>
+        <td class="uppercase text-xs text-left">owner</td>
+        <td class="font-medium text-xs text-right">12345678</td>
       </tr>
       <tr>
-        <td class="uppercase text-sm">date created</td>
-        <td class="font-medium">12345678</td>
+        <td class="uppercase text-xs text-left">date created</td>
+        <td class="font-medium text-xs text-right">12345678</td>
       </tr>
     </table>
 </template>
