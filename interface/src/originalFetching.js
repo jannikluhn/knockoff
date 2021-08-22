@@ -45,12 +45,24 @@ async function fetchOriginalContractState(chainID, contractAddress) {
   const attachedContract = contractFactories["IERC165"].attach(contractAddress);
   const contract = attachedContract.connect(provider);
   try {
-    const [supportsIERC721, supportsIERC721Metadata] = await Promise.all([
+    const [
+      supportsIERC165,
+      supportsNotIERC165,
+      supportsIERC721,
+      supportsIERC721Metadata,
+    ] = await Promise.all([
+      contract.supportsInterface(interfaceIDs["IERC165"]),
+      contract.supportsInterface(interfaceIDs["NotIERC165"]),
       contract.supportsInterface(interfaceIDs["IERC721"]),
       contract.supportsInterface(interfaceIDs["IERC721Metadata"]),
     ]);
-    state.supportsIERC721 = supportsIERC721;
-    state.supportsIERC721Metadata = supportsIERC721Metadata;
+    if (supportsIERC165 && !supportsNotIERC165) {
+      state.supportsIERC721 = supportsIERC721;
+      state.supportsIERC721Metadata = supportsIERC721Metadata;
+    } else {
+      state.supportsIERC721 = false;
+      state.supportsIERC721Metadata = false;
+    }
   } catch (e) {
     if (e.code === ethers.errors.CALL_EXCEPTION) {
       state.supportsIERC721 = false;
@@ -58,7 +70,7 @@ async function fetchOriginalContractState(chainID, contractAddress) {
     } else {
       throwError(
         errorCodes.CHAIN_ERROR,
-        "failed to check contract for ERC721 interfaces",
+        "failed to query contract for supported interfaces",
         e
       );
     }
