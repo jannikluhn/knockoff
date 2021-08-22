@@ -3,7 +3,13 @@
     <Artwork />
     <div class="flex flex-col items-center xl:w-1/2 xl:px-3">
       <Header />
-      <NFTDataTable />
+      <NFTDataTable
+        :chainID="chainID"
+        :contractAddress="contractAddress"
+        :tokenID="tokenID"
+        :owner="token.owner"
+        :mintTimestamp="token.mintTimestamp"
+      />
       <Button :isPrimary="true" message="knock-off" />
       <Button :isPrimary="false" message="view original" />
     </div>
