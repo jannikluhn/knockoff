@@ -46,7 +46,7 @@ async function fetchJSONMetadataNoCache(chainID, contractAddress, tokenID) {
 
   const response = await window.fetch(uri, {
     headers: {
-      "Content-Type": "application/json",
+      "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
     },
   });
   if (!response.ok) {
