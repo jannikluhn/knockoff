@@ -4,7 +4,7 @@
   <div class="flex flex-col items-center xl:w-1/2 xl:px-3">
     <Header />
     <NFTDataTable />
-    <Button :isPrimary="true"/>
+    <Button :isPrimary="true" message="knock-off"/>
   </div>
 </div>
 </template>
