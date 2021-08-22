@@ -21,13 +21,21 @@ export default {
       }
       return chainNames[this.chainID];
     },
+    mintDateString() {
+      if (!this.mintTimestamp) {
+        return null;
+      }
+      const d = new Date(this.mintTimestamp * 1000);
+      return d.getFullYear() + "-" + d.getMonth() + "-" + d.getDate();
+    },
+
     tableRows() {
       return [
         { label: "chain", value: this.chain },
         { label: "contract address", value: this.contractAddress },
         { label: "token id", value: this.tokenID },
         { label: "owner", value: this.owner },
-        { label: "mint date", value: this.mintTimestamp },
+        { label: "mint date", value: this.mintDateString },
       ];
     },
   },
