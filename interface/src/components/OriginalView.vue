@@ -2,6 +2,7 @@
   <div>
     <p>{{ contractState }}</p>
     <p>{{ tokenState }}</p>
+    <p>{{ tokenGraph ? tokenGraph : "not indexed" }}</p>
     <p>{{ metadata }}</p>
   </div>
 </template>
@@ -10,6 +11,7 @@
 import {
   fetchOriginalContractState,
   fetchOriginalTokenState,
+  fetchOriginalTokenGraph,
 } from "../originalFetching";
 import { fetchERC721Metadata } from "../erc721MetadataFetching.js";
 
@@ -23,6 +25,7 @@ export default {
 
       contractState: null,
       tokenState: null,
+      tokenGraph: null,
       metadata: null,
     };
   },
@@ -48,7 +51,9 @@ export default {
   methods: {
     tokenChangeHandler() {
       if (!this.tokenInputProps) {
-        this.token = null;
+        this.contractState = null;
+        this.tokenState = null;
+        this.tokenGraph = null;
         this.metadata = null;
       } else {
         this.fetch();
@@ -62,6 +67,7 @@ export default {
 
       this.contractState = null;
       this.tokenState = null;
+      this.tokenGraph = null;
       this.metadata = null;
 
       try {
@@ -95,7 +101,18 @@ export default {
             return;
           }
           this.metadata = metadata;
-          console.log(this.metadata);
+        }
+
+        if (this.tokenState.exists) {
+          const tokenGraph = await fetchOriginalTokenGraph(
+            this.chainID,
+            this.contractAddress,
+            this.tokenID
+          );
+          if (this.currentRequest !== requestID) {
+            return;
+          }
+          this.tokenGraph = tokenGraph;
         }
       } finally {
         if (this.currentRequest === requestID) {

@@ -1,7 +1,53 @@
+import gql from "graphql-tag";
 import { ethers } from "ethers";
 import { contractFactories, interfaceIDs } from "./contracts.js";
 import { throwError, errorCodes } from "./errors.js";
 import { providers } from "./chains.js";
+import { apolloClients } from "./apollo.js";
+
+const originalTokenQuery = gql`
+  query originalToken($id: ID!) {
+    originalToken(id: $id) {
+      id
+      numKnockOffs
+    }
+  }
+`;
+
+function getOriginalTokenID(chainID, contractAddress, tokenID) {
+  return [
+    "original",
+    chainID.toString(),
+    ethers.utils.getAddress(contractAddress).toLowerCase(),
+    ethers.BigNumber.from(tokenID).toHexString(),
+  ].join("-");
+}
+
+async function fetchOriginalTokenGraph(chainID, contractAddress, tokenID) {
+  const originalTokenID = getOriginalTokenID(chainID, contractAddress, tokenID);
+
+  const client = apolloClients[chainID];
+  if (!client) {
+    throwError(
+      errorCodes.UNEXPECTED_ERROR,
+      "no apollo client for chain id " + chainID
+    );
+  }
+
+  let result;
+  try {
+    result = await client.query({
+      query: originalTokenQuery,
+      variables: {
+        id: originalTokenID,
+      },
+    });
+  } catch (e) {
+    throwError(errorCodes.APOLLO_ERROR, "failed to fetch knock off token", e);
+  }
+
+  return result.data.originalToken;
+}
 
 function makeNFTContractState() {
   return {
@@ -140,4 +186,8 @@ async function fetchOriginalTokenState(
   return state;
 }
 
-export { fetchOriginalContractState, fetchOriginalTokenState };
+export {
+  fetchOriginalContractState,
+  fetchOriginalTokenState,
+  fetchOriginalTokenGraph,
+};

@@ -7,6 +7,7 @@ import { setupRouter, router } from "./router";
 import "tailwindcss/tailwind.css";
 
 Vue.config.productionTip = false;
+
 setupFormulate();
 setupRouter();
 
