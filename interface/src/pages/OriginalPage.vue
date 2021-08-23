@@ -1,12 +1,12 @@
 <template>
-<div class="flex flex-col items-center py-8 xl:flex-row-reverse">
-  <Artwork />
-  <div class="flex flex-col items-center xl:w-1/2 xl:px-3">
-    <Header />
-    <NFTDataTable />
-    <Button :isPrimary="true" message="knock-off"/>
+  <div class="flex flex-col items-center py-8 xl:flex-row-reverse">
+    <Artwork />
+    <div class="flex flex-col items-center xl:w-1/2 xl:px-3">
+      <Header />
+      <NFTDataTable />
+      <Button :isPrimary="true" message="knock-off" />
+    </div>
   </div>
-</div>
 </template>
 
 <script>
@@ -22,7 +22,7 @@ export default {
     Artwork,
     Header,
     NFTDataTable,
-    Button
+    Button,
   },
 };
 </script>
