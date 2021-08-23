@@ -1,9 +1,9 @@
 <template>
   <div
-    class="w-full md:w-64 max-h-96 rounded overflow-hidden border-2 border-black"
+    class="w-full my-4 rounded overflow-hidden border-2 border-black transform hover:-translate-y-0.5"
   >
     <img
-      class="w-full h-60 object-cover object-center"
+      class="w-full h-64 object-cover object-center"
       src="https://f8n-ipfs-production.imgix.net/QmaZC1Rp3tAW9zF7indbX79CMXfeu6tZRtg5oyP7umGWiR/nft.png?q=100&w=1680&auto=compress&fit=fill&max-h=1680"
       alt="NFT Artwork"
     />
