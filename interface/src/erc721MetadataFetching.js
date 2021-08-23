@@ -2,6 +2,7 @@ import { ethers } from "ethers";
 import { throwError, errorCodes } from "./errors";
 import { providers } from "./chains.js";
 import { contractFactories } from "./contracts";
+import { getCORSProxyURL } from "./cors.js";
 
 let cache = {};
 
@@ -44,11 +45,7 @@ async function fetchJSONMetadataNoCache(chainID, contractAddress, tokenID) {
     );
   }
 
-  const response = await window.fetch(uri, {
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-    },
-  });
+  const response = await window.fetch(getCORSProxyURL(uri));
   if (!response.ok) {
     throwError(
       errorCodes.NETWORK_ERROR,
