@@ -4,25 +4,46 @@
   >
     <img
       class="w-full h-64 object-cover object-center"
-      src="https://f8n-ipfs-production.imgix.net/QmaZC1Rp3tAW9zF7indbX79CMXfeu6tZRtg5oyP7umGWiR/nft.png?q=100&w=1680&auto=compress&fit=fill&max-h=1680"
+      :src="srcURL"
       alt="NFT Artwork"
     />
     <div class="px-4 py-3 flex items-center justify-between">
       <div class="">
         <h2 class="font-extrabold italic uppercase text-xl mb-0.5 leading-5">
-          The Coldest Sunset
+          {{ title }}
         </h2>
         <p class="font-medium text-sm">
-          21-08-2021
+          {{ mintDate }}
         </p>
       </div>
-      <div class="font-semi-bold italic text-3xl">#4</div>
+      <div class="font-semi-bold italic text-3xl"># {{ serialNumber }}</div>
     </div>
   </div>
 </template>
 
 <script>
+import { formatTimestampAsDate } from "../formatting";
+
 export default {
   name: "Card",
+  props: ["mintTimestamp", "serialNumber", "metadata"],
+
+  computed: {
+    title() {
+      if (this.metadata && this.metadata["name"]) {
+        return this.metadata["name"];
+      }
+      return "Unknown title";
+    },
+    mintDate() {
+      return formatTimestampAsDate(this.mintTimestamp);
+    },
+    srcURL() {
+      if (this.metadata && this.metadata["image"]) {
+        return this.metadata["image"];
+      }
+      return "";
+    },
+  },
 };
 </script>

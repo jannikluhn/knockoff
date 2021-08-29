@@ -41,8 +41,12 @@ async function fetchJSONMetadataNoCache(chainID, contractAddress, tokenID) {
   } catch (e) {
     throwError(
       errorCodes.CHAIN_ERROR,
-      "failed to read ERC721 URI from contract"
+      "failed to read ERC721 URI from contract",
+      e
     );
+  }
+  if (uri.length === 0) {
+    throwError(errorCodes.CHAIN_ERROR, "ERC721 URI of token is empty");
   }
 
   const response = await window.fetch(getCORSProxyURL(uri));
@@ -53,7 +57,15 @@ async function fetchJSONMetadataNoCache(chainID, contractAddress, tokenID) {
     );
   }
 
-  return await response.json();
+  try {
+    return await response.json();
+  } catch (e) {
+    throwError(
+      errorCodes.NETWORK_ERROR,
+      "ERC721 token URI points to invalid JSON",
+      e
+    );
+  }
 }
 
 export { fetchERC721Metadata };
