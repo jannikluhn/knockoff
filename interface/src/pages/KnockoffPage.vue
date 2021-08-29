@@ -22,7 +22,7 @@
           :mintTimestamp="token.mintTimestamp"
         />
         <Button :isPrimary="true" message="knock-off" />
-        <router-link :to="originalPath">View Original</router-link>
+        <router-link :to="originalLink">View Original</router-link>
       </div>
     </div>
   </div>
@@ -88,17 +88,16 @@ export default {
       }
       return [this.chainID, this.contractAddress, this.tokenID];
     },
-    originalPath() {
+    originalLink() {
       if (!this.invalidTokenInputProps) {
-        return (
-          "/" +
-          [
-            "original",
-            chainIDToPathSegment(this.chainID),
-            ethers.utils.getAddress(this.contractAddress),
-            ethers.BigNumber.from(this.tokenID).toString(),
-          ].join("/")
-        );
+        return {
+          name: "original",
+          params: {
+            chain: chainIDToPathSegment(this.chainID),
+            contractAddress: ethers.utils.getAddress(this.contractAddress),
+            tokenID: ethers.BigNumber.from(this.tokenID).toString(),
+          },
+        };
       }
       return null;
     },
