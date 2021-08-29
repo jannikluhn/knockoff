@@ -11,7 +11,6 @@
       <div class="flex flex-col items-center xl:w-1/2 xl:px-3">
         <Header
           :isKnockOff="true"
-          :artist="artist"
           :title="title"
           :serialNumber="token.serialNumber"
         />
@@ -117,11 +116,11 @@ export default {
       );
     },
 
-    artist() {
-      return "Artist";
-    },
     title() {
-      return "title";
+      if (this.metadata) {
+        return this.metadata["name"];
+      }
+      return "Unknown Title";
     },
   },
 

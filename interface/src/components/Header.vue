@@ -1,6 +1,5 @@
 <template>
   <div class="text-center p-5">
-    <h3 class="font-semibold capitalize text-xl">{{ artist }}</h3>
     <h2 class=" font-extrabold italic uppercase text-3xl leading-8 my-3">
       {{ title }}
     </h2>
@@ -15,7 +14,7 @@
 <script>
 export default {
   name: "Header",
-  props: ["isKnockOff", "serialNumber", "artist", "title"],
+  props: ["isKnockOff", "serialNumber", "title"],
   computed: {
     label() {
       if (this.isKnockOff) {
