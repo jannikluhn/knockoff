@@ -38,6 +38,7 @@ import { pathSegmentToChainID, chainIDToPathSegment } from "../chains";
 import { fetchKnockOffToken } from "../knockOffFetching.js";
 import { fetchERC721Metadata } from "../erc721MetadataFetching.js";
 import { isValidAddress, isValidTokenID } from "../validation.js";
+import { logError } from "../errors.js";
 
 export default {
   name: "KnockoffPage",
@@ -161,7 +162,7 @@ export default {
             this.tokenID
           );
         } catch (e) {
-          console.log("failed to fetch token", e.message, e.obj);
+          logError("failed to fetch token", e);
           tokenFetchError = e;
         }
         if (this.currentRequest !== requestID) {
@@ -180,7 +181,7 @@ export default {
               token.tokenID
             );
           } catch (e) {
-            console.log("failed to fetch token metadata", e.message, e.obj);
+            logError("failed to fetch token metadata", e);
             metadataFetchError = e;
           }
           if (this.currentRequest !== requestID) {

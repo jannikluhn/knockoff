@@ -19,4 +19,15 @@ function throwError(code, message, obj, ...params) {
   throw error;
 }
 
-export { errorCodes, KnockOffError, throwError };
+function logError(message, error) {
+  let m = error.message;
+  if (error.obj) {
+    m += String(error.obj);
+  }
+  if (message) {
+    m = message + ": " + m;
+  }
+  console.error(m);
+}
+
+export { errorCodes, KnockOffError, throwError, logError };

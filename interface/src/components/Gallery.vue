@@ -17,6 +17,7 @@ import Card from "./Card.vue";
 import { apolloClients } from "../apollo.js";
 import { RecentKnockOffFetcher } from "../recentKnockOffFetcher.js";
 import { fetchERC721Metadata } from "../erc721MetadataFetching.js";
+import { logError } from "../errors.js";
 
 export default {
   name: "Gallery",
@@ -63,7 +64,7 @@ export default {
           try {
             moreTokens = await this.fetcher.fetchMore();
           } catch (e) {
-            console.error("error fetching tokens", e.message, e.obj);
+            logError("error fetching tokens", e);
             return;
           }
 
@@ -94,7 +95,7 @@ export default {
         );
         this.$set(this.metadata, token.id, metadata);
       } catch (e) {
-        console.error("error fetching token metadata:", e.message, e.obj);
+        logError("error fetching token metadata:", e);
         this.metadata[token.id] = null;
       }
     },
