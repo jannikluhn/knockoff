@@ -43,3 +43,7 @@ export function pathSegmentToChainID(segment) {
   }
   return null;
 }
+
+export function chainIDToPathSegment(chainID) {
+  return chains[chainID].pathSegment;
+}

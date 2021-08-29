@@ -23,7 +23,7 @@
           :mintTimestamp="token.mintTimestamp"
         />
         <Button :isPrimary="true" message="knock-off" />
-        <Button :isPrimary="false" message="view original" />
+        <router-link :to="originalPath">View Original</router-link>
       </div>
     </div>
   </div>
@@ -35,7 +35,7 @@ import Artwork from "../components/Artwork.vue";
 import Header from "../components/Header.vue";
 import NFTDataTable from "../components/NFTDataTable.vue";
 import Button from "../components/Button.vue";
-import { pathSegmentToChainID } from "../chains";
+import { pathSegmentToChainID, chainIDToPathSegment } from "../chains";
 import { fetchKnockOffToken } from "../knockOffFetching.js";
 import { fetchERC721Metadata } from "../erc721MetadataFetching.js";
 import { MAX_TOKEN_ID } from "../constants";
@@ -97,6 +97,20 @@ export default {
         return null;
       }
       return [this.chainID, this.contractAddress, this.tokenID];
+    },
+    originalPath() {
+      if (!this.invalidTokenInputProps) {
+        return (
+          "/" +
+          [
+            "original",
+            chainIDToPathSegment(this.chainID),
+            ethers.utils.getAddress(this.contractAddress),
+            ethers.BigNumber.from(this.tokenID).toString(),
+          ].join("/")
+        );
+      }
+      return null;
     },
 
     // request status
