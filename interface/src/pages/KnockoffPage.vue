@@ -1,22 +1,37 @@
 <template>
   <div class="flex flex-col items-center py-8 xl:flex-row-reverse">
-    <Artwork />
-    <div class="flex flex-col items-center xl:w-1/2 xl:px-3">
-      <Header />
-      <NFTDataTable
-        :chainID="chainID"
-        :contractAddress="contractAddress"
-        :tokenID="tokenID"
-        :owner="token.owner"
-        :mintTimestamp="token.mintTimestamp"
-      />
-      <Button :isPrimary="true" message="knock-off" />
-      <Button :isPrimary="false" message="view original" />
+    <p v-if="invalidTokenInputProps">Invalid URL params</p>
+    <p v-else-if="requestInProgress">Loading token...</p>
+    <p v-else-if="tokenFetchError">
+      {{ tokenFetchError.message }}
+    </p>
+    <p v-else-if="!token">Token not found</p>
+    <div v-else>
+      <Artwork />
+      <div class="flex flex-col items-center xl:w-1/2 xl:px-3">
+        <Header
+          :isKnockOff="true"
+          :artist="artist"
+          :title="title"
+          :serialNumber="token.serialNumber"
+        />
+        <NFTDataTable
+          v-if="token"
+          :chainID="chainID"
+          :contractAddress="contractAddress"
+          :tokenID="tokenID"
+          :owner="token.owner"
+          :mintTimestamp="token.mintTimestamp"
+        />
+        <Button :isPrimary="true" message="knock-off" />
+        <Button :isPrimary="false" message="view original" />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import { ethers } from "ethers";
 import Artwork from "../components/Artwork.vue";
 import Header from "../components/Header.vue";
 import NFTDataTable from "../components/NFTDataTable.vue";
@@ -24,6 +39,7 @@ import Button from "../components/Button.vue";
 import { pathSegmentToChainID } from "../chains";
 import { fetchKnockOffToken } from "../knockOffFetching.js";
 import { fetchERC721Metadata } from "../erc721MetadataFetching.js";
+import { MAX_TOKEN_ID } from "../constants";
 
 export default {
   name: "KnockoffPage",
@@ -40,6 +56,8 @@ export default {
     return {
       token: null,
       metadata: null,
+      tokenFetchError: null,
+      metadataFetchError: null,
 
       requestCounter: 0,
       currentRequest: null,
@@ -47,31 +65,63 @@ export default {
   },
 
   computed: {
+    // URL param validation
     chainID() {
       return pathSegmentToChainID(this.chain);
     },
     unknownChain() {
       return !this.chainID;
     },
-    requestInProgress() {
-      return this.currentRequest !== null;
+    invalidContractAddress() {
+      try {
+        ethers.utils.getAddress(this.contractAddress);
+      } catch {
+        return true;
+      }
+      return false;
+    },
+    invalidTokenID() {
+      try {
+        const tokenID = ethers.BigNumber.from(this.tokenID);
+        return tokenID.lt(0) || tokenID.gt(MAX_TOKEN_ID);
+      } catch {
+        return true;
+      }
+    },
+    invalidTokenInputProps() {
+      return (
+        this.unknownChain || this.invalidContractAddress || this.invalidTokenID
+      );
     },
     tokenInputProps() {
-      if (
-        this.unknownChain ||
-        !this.chainID ||
-        !this.contractAddress ||
-        !this.tokenID
-      ) {
+      if (this.invalidTokenInputProps) {
         return null;
       }
       return [this.chainID, this.contractAddress, this.tokenID];
     },
+
+    // request status
+    requestInProgress() {
+      return this.currentRequest !== null;
+    },
     tokenFetchingFailed() {
-      return !this.requestInProgress && !this.token;
+      return (
+        !this.invalidTokenInputProps && !this.requestInProgress && !this.token
+      );
     },
     metadataFetchingFailed() {
-      return !this.requestInProgress && !this.metadata;
+      return (
+        !this.invalidTokenInputProps &&
+        !this.requestInProgress &&
+        !this.metadata
+      );
+    },
+
+    artist() {
+      return "Artist";
+    },
+    title() {
+      return "title";
     },
   },
 
@@ -101,28 +151,46 @@ export default {
 
       this.token = null;
       this.metadata = null;
+      this.tokenFetchError = null;
+      this.metadataFetchError = null;
 
       try {
-        const token = await fetchKnockOffToken(
-          this.chainID,
-          this.contractAddress,
-          this.tokenID
-        );
+        let token = null;
+        let tokenFetchError = null;
+        try {
+          token = await fetchKnockOffToken(
+            this.chainID,
+            this.contractAddress,
+            this.tokenID
+          );
+        } catch (e) {
+          console.log("failed to fetch token", e.message, e.obj);
+          tokenFetchError = e;
+        }
         if (this.currentRequest !== requestID) {
           return;
         }
         this.token = token;
+        this.tokenFetchError = tokenFetchError;
 
         if (this.token) {
-          const metadata = await fetchERC721Metadata(
-            token.contract.chainID,
-            token.contract.address,
-            token.tokenID
-          );
+          let metadata;
+          let metadataFetchError;
+          try {
+            metadata = await fetchERC721Metadata(
+              token.contract.chainID,
+              token.contract.address,
+              token.tokenID
+            );
+          } catch (e) {
+            console.log("failed to fetch token metadata", e.message, e.obj);
+            metadataFetchError = e;
+          }
           if (this.currentRequest !== requestID) {
             return;
           }
           this.metadata = metadata;
+          this.metadataFetchError = metadataFetchError;
         }
       } finally {
         if (this.currentRequest === requestID) {

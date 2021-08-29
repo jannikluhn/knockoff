@@ -22,7 +22,6 @@ class KnockOffError extends Error {
 
 function throwError(code, message, obj, ...params) {
   const error = new KnockOffError(code, message, obj, ...params);
-  console.error(error);
   throw error;
 }
 
