@@ -1,9 +1,3 @@
-export default {
-  UNEXPECTED_ERROR: "UNEXPECTED_ERROR",
-  BAD_STORE: "BAD_STORE",
-  NETWORK_ERROR: "NETWORK_ERROR",
-};
-
 const errorCodes = {
   UNEXPECTED_ERROR: "UNEXPECTED_ERROR",
   NETWORK_ERROR: "NETWORK_ERROR",
@@ -25,4 +19,15 @@ function throwError(code, message, obj, ...params) {
   throw error;
 }
 
-export { errorCodes, KnockOffError, throwError };
+function logError(message, error) {
+  let m = error.message;
+  if (error.obj) {
+    m += String(error.obj);
+  }
+  if (message) {
+    m = message + ": " + m;
+  }
+  console.error(m);
+}
+
+export { errorCodes, KnockOffError, throwError, logError };

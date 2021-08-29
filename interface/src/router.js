@@ -13,24 +13,29 @@ function setupRouter() {
 
 const routes = [
   {
+    name: "landing",
     path: "/",
     component: LandingPage,
   },
   {
+    name: "gallery",
     path: "/gallery",
     component: GalleryPage,
   },
   {
+    name: "original",
     path: "/original/:chain/:contractAddress/:tokenID",
     component: OriginalPage,
     props: true,
   },
   {
+    name: "knockoff",
     path: "/knockoff/:chain/:contractAddress/:tokenID",
     component: KnockoffPage,
     props: true,
   },
   {
+    name: "notfound",
     path: "*",
     component: NotFoundPage,
   },

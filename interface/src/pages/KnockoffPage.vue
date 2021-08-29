@@ -22,7 +22,7 @@
           :mintTimestamp="token.mintTimestamp"
         />
         <Button :isPrimary="true" message="knock-off" />
-        <router-link :to="originalPath">View Original</router-link>
+        <router-link :to="originalLink">View Original</router-link>
       </div>
     </div>
   </div>
@@ -38,6 +38,7 @@ import { pathSegmentToChainID, chainIDToPathSegment } from "../chains";
 import { fetchKnockOffToken } from "../knockOffFetching.js";
 import { fetchERC721Metadata } from "../erc721MetadataFetching.js";
 import { isValidAddress, isValidTokenID } from "../validation.js";
+import { logError } from "../errors.js";
 
 export default {
   name: "KnockoffPage",
@@ -87,17 +88,16 @@ export default {
       }
       return [this.chainID, this.contractAddress, this.tokenID];
     },
-    originalPath() {
+    originalLink() {
       if (!this.invalidTokenInputProps) {
-        return (
-          "/" +
-          [
-            "original",
-            chainIDToPathSegment(this.chainID),
-            ethers.utils.getAddress(this.contractAddress),
-            ethers.BigNumber.from(this.tokenID).toString(),
-          ].join("/")
-        );
+        return {
+          name: "original",
+          params: {
+            chain: chainIDToPathSegment(this.chainID),
+            contractAddress: ethers.utils.getAddress(this.contractAddress),
+            tokenID: ethers.BigNumber.from(this.tokenID).toString(),
+          },
+        };
       }
       return null;
     },
@@ -161,7 +161,7 @@ export default {
             this.tokenID
           );
         } catch (e) {
-          console.log("failed to fetch token", e.message, e.obj);
+          logError("failed to fetch token", e);
           tokenFetchError = e;
         }
         if (this.currentRequest !== requestID) {
@@ -180,7 +180,7 @@ export default {
               token.tokenID
             );
           } catch (e) {
-            console.log("failed to fetch token metadata", e.message, e.obj);
+            logError("failed to fetch token metadata", e);
             metadataFetchError = e;
           }
           if (this.currentRequest !== requestID) {

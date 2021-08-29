@@ -1,22 +1,26 @@
 <template>
-  <div>
-    <p>Gallery</p>
-    <Card />
-    <p>
-      {{ tokens }}
-    </p>
-    <button @click="fetchMore" :disabled="requestInProgress">Fetch More</button>
+  <div
+    class="sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 justify-items-center"
+  >
+    <Card
+      v-for="token in tokens"
+      :key="token.id"
+      :token="token"
+      :metadata="metadata[token.id]"
+    />
   </div>
 </template>
 
 <script>
-import Card from "./Card.vue"
+import Card from "./Card.vue";
 import { apolloClients } from "../apollo.js";
 import { RecentKnockOffFetcher } from "../recentKnockOffFetcher.js";
-// import { fetchERC721Metadata } from "../erc721MetadataFetching.js";
+import { fetchERC721Metadata } from "../erc721MetadataFetching.js";
+import { logError } from "../errors.js";
 
 export default {
   name: "Gallery",
+  props: ["maxTokens"],
 
   components: {
     Card,
@@ -25,40 +29,74 @@ export default {
   data() {
     return {
       tokens: [],
-      requestInProgress: false,
+      metadata: {},
+      fetcher: null,
+      fetching: false,
     };
   },
 
-  created() {
-    this.fetcher = new RecentKnockOffFetcher(apolloClients);
-  },
-
-  async mounted() {
-    await this.fetchMore();
+  watch: {
+    maxTokens: {
+      immediate: true,
+      handler() {
+        if (!this.fetching) {
+          this.fetchTokens();
+        }
+      },
+    },
   },
 
   methods: {
-    async fetchMore() {
-      this.requestInProgress = true;
-      try {
-        const moreTokens = await this.fetcher.fetchMore();
+    async fetchTokens() {
+      if (this.fetchedAll || this.fetching) {
+        return;
+      }
+      this.fetching = true;
 
-        for (const token of moreTokens) {
-          this.tokens.push(token);
-          this.fetchERC721MetadataFor(token); // run in background
+      if (!this.fetcher) {
+        this.fetcher = new RecentKnockOffFetcher(apolloClients);
+      }
+
+      try {
+        for (;;) {
+          let moreTokens;
+          try {
+            moreTokens = await this.fetcher.fetchMore();
+          } catch (e) {
+            logError("error fetching tokens", e);
+            return;
+          }
+
+          for (const token of moreTokens) {
+            this.tokens.push(token);
+            this.fetchERC721MetadataFor(token); // run in background
+          }
+
+          if (moreTokens.length == 0) {
+            this.fetchedAll = true;
+            return;
+          }
+          if (this.tokens.length >= this.maxTokens) {
+            return;
+          }
         }
       } finally {
-        this.requestInProgress = false;
+        this.fetching = false;
       }
     },
 
-    async fetchERC721MetadataFor() {
-      // TODO: token doesn't contain these fields at the moment
-      // const json = await fetchERC721Metadata(
-      //   token.chainID,
-      //   token.contractAddress,
-      //   token.tokenID
-      // );
+    async fetchERC721MetadataFor(token) {
+      try {
+        const metadata = await fetchERC721Metadata(
+          token.contract.chainID,
+          token.contract.address,
+          token.tokenID
+        );
+        this.$set(this.metadata, token.id, metadata);
+      } catch (e) {
+        logError("error fetching token metadata:", e);
+        this.metadata[token.id] = null;
+      }
     },
   },
 };
