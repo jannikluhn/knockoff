@@ -5,9 +5,8 @@
     <Card
       v-for="token in tokens"
       :key="token.id"
+      :token="token"
       :metadata="metadata[token.id]"
-      :mintTimestamp="token.mintTimestamp"
-      :serialNumber="token.serialNumber"
     />
   </div>
 </template>
