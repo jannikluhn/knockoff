@@ -1,16 +1,22 @@
 <template>
-  <div>
-    <p>Gallery</p>
+  <div
+    class="sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 justify-items-center"
+  >
     <Card />
-    <p>
-      {{ tokens }}
-    </p>
-    <button @click="fetchMore" :disabled="requestInProgress">Fetch More</button>
+    <Card />
+    <Card />
+    <Card />
+    <Card />
+    <Card />
+    <Card />
+    <Card />
+    <Card />
+    <Card />
   </div>
 </template>
 
 <script>
-import Card from "./Card.vue"
+import Card from "./Card.vue";
 import { apolloClients } from "../apollo.js";
 import { RecentKnockOffFetcher } from "../recentKnockOffFetcher.js";
 // import { fetchERC721Metadata } from "../erc721MetadataFetching.js";
