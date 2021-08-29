@@ -15,7 +15,6 @@
           :serialNumber="token.serialNumber"
         />
         <NFTDataTable
-          v-if="token"
           :chainID="chainID"
           :contractAddress="contractAddress"
           :tokenID="tokenID"
@@ -142,6 +141,8 @@ export default {
       if (!this.tokenInputProps) {
         this.token = null;
         this.metadata = null;
+        this.tokenFetchError = null;
+        this.metadataFetchError = null;
       } else {
         this.fetch();
       }
