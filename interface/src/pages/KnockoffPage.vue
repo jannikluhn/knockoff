@@ -131,24 +131,13 @@ export default {
     tokenInputProps: {
       immediate: true,
       handler() {
-        this.tokenChangeHandler();
+        this.fetchToken();
       },
     },
   },
 
   methods: {
-    tokenChangeHandler() {
-      if (!this.tokenInputProps) {
-        this.token = null;
-        this.metadata = null;
-        this.tokenFetchError = null;
-        this.metadataFetchError = null;
-      } else {
-        this.fetch();
-      }
-    },
-
-    async fetch() {
+    async fetchToken() {
       const requestID = this.requestCounter;
       this.currentRequest = requestID;
       this.requestCounter += 1;
@@ -159,6 +148,10 @@ export default {
       this.metadataFetchError = null;
 
       try {
+        if (!this.tokenInputProps) {
+          return;
+        }
+
         let token = null;
         let tokenFetchError = null;
         try {
