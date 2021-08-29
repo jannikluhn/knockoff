@@ -15,7 +15,6 @@
           :serialNumber="token.serialNumber"
         />
         <NFTDataTable
-          v-if="token"
           :chainID="chainID"
           :contractAddress="contractAddress"
           :tokenID="tokenID"
@@ -38,7 +37,7 @@ import Button from "../components/Button.vue";
 import { pathSegmentToChainID, chainIDToPathSegment } from "../chains";
 import { fetchKnockOffToken } from "../knockOffFetching.js";
 import { fetchERC721Metadata } from "../erc721MetadataFetching.js";
-import { MAX_TOKEN_ID } from "../constants";
+import { isValidAddress, isValidTokenID } from "../validation.js";
 
 export default {
   name: "KnockoffPage",
@@ -72,20 +71,10 @@ export default {
       return !this.chainID;
     },
     invalidContractAddress() {
-      try {
-        ethers.utils.getAddress(this.contractAddress);
-      } catch {
-        return true;
-      }
-      return false;
+      return !isValidAddress(this.contractAddress);
     },
     invalidTokenID() {
-      try {
-        const tokenID = ethers.BigNumber.from(this.tokenID);
-        return tokenID.lt(0) || tokenID.gt(MAX_TOKEN_ID);
-      } catch {
-        return true;
-      }
+      return !isValidTokenID(this.tokenID);
     },
     invalidTokenInputProps() {
       return (
@@ -142,22 +131,13 @@ export default {
     tokenInputProps: {
       immediate: true,
       handler() {
-        this.tokenChangeHandler();
+        this.fetchToken();
       },
     },
   },
 
   methods: {
-    tokenChangeHandler() {
-      if (!this.tokenInputProps) {
-        this.token = null;
-        this.metadata = null;
-      } else {
-        this.fetch();
-      }
-    },
-
-    async fetch() {
+    async fetchToken() {
       const requestID = this.requestCounter;
       this.currentRequest = requestID;
       this.requestCounter += 1;
@@ -168,6 +148,10 @@ export default {
       this.metadataFetchError = null;
 
       try {
+        if (!this.tokenInputProps) {
+          return;
+        }
+
         let token = null;
         let tokenFetchError = null;
         try {

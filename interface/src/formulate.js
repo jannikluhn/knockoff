@@ -1,25 +1,13 @@
 import Vue from "vue";
 import VueFormulate from "@braid/vue-formulate";
-import { ethers } from "ethers";
-import { MAX_TOKEN_ID } from "./constants.js";
+import { isValidAddress, isValidTokenID } from "./validation";
 
 function addressRule(context) {
-  try {
-    ethers.utils.getAddress(context.value);
-  } catch (e) {
-    return false;
-  }
-  return true;
+  return isValidAddress(context.value);
 }
 
 function tokenIDRule(context) {
-  let tokenID;
-  try {
-    tokenID = ethers.BigNumber.from(context.value);
-  } catch (e) {
-    return false;
-  }
-  return tokenID.gte(0) && tokenID.lte(MAX_TOKEN_ID);
+  return isValidTokenID(context.value);
 }
 
 function setupFormulate() {

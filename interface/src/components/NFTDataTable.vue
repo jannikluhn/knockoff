@@ -1,8 +1,12 @@
 <template>
   <table class="table-auto w-full my-4 mx-auto sm:w-72">
     <tr v-for="row in tableRows" :key="row.label">
-      <td class="uppercase text-left">{{ row.label }}</td>
-      <td class="font-medium capitalize text-right">{{ row.value }}</td>
+      <td class="uppercase text-left" v-if="row.value !== null">
+        {{ row.label }}
+      </td>
+      <td class="font-medium capitalize text-right" v-if="row.value !== null">
+        {{ row.value }}
+      </td>
     </tr>
   </table>
 </template>
