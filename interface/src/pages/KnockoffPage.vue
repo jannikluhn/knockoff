@@ -7,7 +7,7 @@
     </p>
     <p v-else-if="!token">Token not found</p>
     <div v-else>
-      <Artwork />
+      <Artwork :metadata="metadata" :error="metadataFetchError" />
       <div class="flex flex-col items-center xl:w-1/2 xl:px-3">
         <Header
           :isKnockOff="true"

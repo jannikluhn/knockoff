@@ -1,15 +1,34 @@
 <template>
-    <div class="xl:w-1/2">
-        <img
-            class="object-contain object-center"
-            src="https://f8n-ipfs-production.imgix.net/QmaZC1Rp3tAW9zF7indbX79CMXfeu6tZRtg5oyP7umGWiR/nft.png?q=100&w=1680&auto=compress&fit=fill&max-h=1680"
-            alt="NFT Artwork"
-        />
-    </div>
+  <div class="xl:w-1/2">
+    <p v-if="error">
+      {{ error.message }}
+    </p>
+    <p v-else-if="!srcURL">
+      Metadata does not contain image URL
+    </p>
+
+    <p v-else>
+      <img
+        class="object-contain object-center"
+        :src="srcURL"
+        alt="NFT Artwork"
+      />
+    </p>
+  </div>
 </template>
 
 <script>
 export default {
   name: "Artwork",
+  props: ["metadata", "error"],
+
+  computed: {
+    srcURL() {
+      if (this.metadata) {
+        return this.metadata["image"];
+      }
+      return null;
+    },
+  },
 };
 </script>
