@@ -1,30 +1,43 @@
 <template>
   <table class="table-auto w-full my-4 mx-auto sm:w-72">
-    <tr>
-      <td class="uppercase text-left">chain</td>
-      <td class="font-medium capitalize text-right">Ethereum</td>
-    </tr>
-    <tr>
-      <td class="uppercase text-left">contract address</td>
-      <td class="font-medium text-right">12345678</td>
-    </tr>
-    <tr>
-      <td class="uppercase text-left">token ID</td>
-      <td class="font-medium text-right">12345678</td>
-    </tr>
-    <tr>
-      <td class="uppercase text-left">owner</td>
-      <td class="font-medium text-right">12345678</td>
-    </tr>
-    <tr>
-      <td class="uppercase text-left">date created</td>
-      <td class="font-medium text-right">12345678</td>
+    <tr v-for="row in tableRows" :key="row.label">
+      <td class="uppercase text-left">{{ row.label }}</td>
+      <td class="font-medium capitalize text-right">{{ row.value }}</td>
     </tr>
   </table>
 </template>
 
 <script>
+import { chainNames } from "../chains.js";
+
 export default {
   name: "NFTDataTable",
+  props: ["chainID", "contractAddress", "tokenID", "owner", "mintTimestamp"],
+
+  computed: {
+    chain() {
+      if (!this.chainID) {
+        return null;
+      }
+      return chainNames[this.chainID];
+    },
+    mintDateString() {
+      if (!this.mintTimestamp) {
+        return null;
+      }
+      const d = new Date(this.mintTimestamp * 1000);
+      return d.getFullYear() + "-" + d.getMonth() + "-" + d.getDate();
+    },
+
+    tableRows() {
+      return [
+        { label: "chain", value: this.chain },
+        { label: "contract address", value: this.contractAddress },
+        { label: "token id", value: this.tokenID },
+        { label: "owner", value: this.owner },
+        { label: "mint date", value: this.mintDateString },
+      ];
+    },
+  },
 };
 </script>

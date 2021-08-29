@@ -1,9 +1,7 @@
 import Vue from "vue";
 import VueFormulate from "@braid/vue-formulate";
 import { ethers } from "ethers";
-
-const MAX_TOKEN_ID =
-  "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
+import { MAX_TOKEN_ID } from "./constants.js";
 
 function addressRule(context) {
   try {

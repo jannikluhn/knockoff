@@ -19,7 +19,7 @@ function getOriginalTokenID(chainID, contractAddress, tokenID) {
     "original",
     chainID.toString(),
     ethers.utils.getAddress(contractAddress).toLowerCase(),
-    ethers.BigNumber.from(tokenID).toHexString(),
+    ethers.BigNumber.from(tokenID).toString(),
   ].join("-");
 }
 
