@@ -13,6 +13,7 @@
 
 <script>
 import { chainNames } from "../chains.js";
+import { formatTimestampAsDate } from "../formatting.js";
 
 export default {
   name: "NFTDataTable",
@@ -29,8 +30,7 @@ export default {
       if (!this.mintTimestamp) {
         return null;
       }
-      const d = new Date(this.mintTimestamp * 1000);
-      return d.getFullYear() + "-" + d.getMonth() + "-" + d.getDate();
+      return formatTimestampAsDate(this.mintTimestamp);
     },
 
     tableRows() {
