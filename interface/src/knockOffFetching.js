@@ -9,7 +9,7 @@ const knockOffTokenQuery = gql`
       id
       tokenID
       serialNumber
-      order
+      ancestorSerialNumbers
       mintTimestamp
       owner
 
