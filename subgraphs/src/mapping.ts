@@ -108,11 +108,11 @@ function updateKnockOffContract(chainID: i32, event: Minted): KnockOffContract {
   return knockOffContract as KnockOffContract;
 }
 
-function getNextKnockOffOrder(
+function getAncestorSerialNumbers(
   knockOffContract: KnockOffContract,
   originalContract: OriginalContract,
   originalToken: OriginalToken
-): i32 {
+): Array<i32> {
   let originalAsKnockOffContractID = getKnockOffContractID(
     knockOffContract.chainID,
     originalContract.address as Address
@@ -121,6 +121,7 @@ function getNextKnockOffOrder(
     originalAsKnockOffContractID
   );
 
+  let serials: Array<i32> = [];
   if (originalAsKnockOffContract != null) {
     let originalAsKnockOffTokenID = getTokenID(
       originalAsKnockOffContract.id,
@@ -132,10 +133,16 @@ function getNextKnockOffOrder(
         originalAsKnockOffToken.id,
       ]);
     }
-    return originalAsKnockOffToken.order + 1;
+
+    let originalAncestorSerials: Array<i32> =
+      originalAsKnockOffToken.ancestorSerialNumbers;
+    for (let i = 0; i < originalAncestorSerials.length; i++) {
+      serials.push(originalAncestorSerials[i]);
+    }
+    serials.push(originalAsKnockOffToken.serialNumber);
   }
 
-  return 1; // if the original is not a knock off, the order is 1
+  return serials;
 }
 
 function createKnockOffToken(
@@ -160,13 +167,13 @@ function createKnockOffToken(
 
   knockOffToken.original = originalToken.id;
   knockOffToken.serialNumber = event.params.serialNumber.toI32();
-
-  knockOffToken.mintTimestamp = event.block.timestamp.toI32();
-  knockOffToken.order = getNextKnockOffOrder(
+  knockOffToken.ancestorSerialNumbers = getAncestorSerialNumbers(
     knockOffContract,
     originalContract,
     originalToken
   );
+
+  knockOffToken.mintTimestamp = event.block.timestamp.toI32();
   knockOffToken.owner = event.params.receiver;
 
   knockOffToken.save();
