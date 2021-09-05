@@ -3,6 +3,7 @@ const errorCodes = {
   NETWORK_ERROR: "NETWORK_ERROR",
   CHAIN_ERROR: "CHAIN_ERROR",
   APOLLO_ERROR: "APOLLO_ERROR",
+  TX_ERROR: "TX_ERROR",
 };
 
 class KnockOffError extends Error {
@@ -19,15 +20,34 @@ function throwError(code, message, obj, ...params) {
   throw error;
 }
 
-function logError(message, error) {
+function formatErrorWithMessage(message, error) {
   let m = error.message;
   if (error.obj) {
-    m += String(error.obj);
+    if (error.obj.message) {
+      m += ": " + String(error.obj.message);
+    } else {
+      m += ": " + String(error.obj);
+    }
   }
   if (message) {
     m = message + ": " + m;
   }
-  console.error(m);
+  return m;
 }
 
-export { errorCodes, KnockOffError, throwError, logError };
+function formatErrorWithoutMessage(error) {
+  return formatErrorWithMessage(null, error);
+}
+
+function logError(message, error) {
+  console.error(formatErrorWithMessage(message, error));
+}
+
+export {
+  errorCodes,
+  KnockOffError,
+  throwError,
+  formatErrorWithMessage,
+  formatErrorWithoutMessage,
+  logError,
+};
