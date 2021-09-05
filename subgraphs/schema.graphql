@@ -42,8 +42,8 @@ type KnockOffToken @entity {
 
   original: OriginalToken!
   serialNumber: Int!
+  ancestorSerialNumbers: [Int!]!
 
   mintTimestamp: Int!
-  order: Int!
   owner: Bytes!
 }
