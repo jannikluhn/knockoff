@@ -29,7 +29,11 @@
           :tokenID="tokenID"
           :owner="tokenChain.owner"
         />
-        <Button :isPrimary="true" message="knock-off" />
+        <KnockOffCreator
+          :chainID="chainID"
+          :contractAddress="contractAddress"
+          :tokenID="tokenID"
+        />
       </div>
     </div>
   </div>
@@ -39,7 +43,7 @@
 import Artwork from "../components/Artwork.vue";
 import Header from "../components/Header.vue";
 import NFTDataTable from "../components/NFTDataTable.vue";
-import Button from "../components/Button.vue";
+import KnockOffCreator from "../components/KnockOffCreator.vue";
 import {
   fetchOriginalContractState,
   fetchOriginalTokenState,
@@ -55,7 +59,7 @@ export default {
     Artwork,
     Header,
     NFTDataTable,
-    Button,
+    KnockOffCreator,
   },
 
   props: ["chain", "contractAddress", "tokenID"],

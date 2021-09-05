@@ -21,7 +21,11 @@
           :owner="token.owner"
           :mintTimestamp="token.mintTimestamp"
         />
-        <Button :isPrimary="true" message="knock-off" />
+        <KnockOffCreator
+          :chainID="chainID"
+          :contractAddress="contractAddress"
+          :tokenID="tokenID"
+        />
         <router-link :to="originalLink">View Original</router-link>
       </div>
     </div>
@@ -33,7 +37,7 @@ import { ethers } from "ethers";
 import Artwork from "../components/Artwork.vue";
 import Header from "../components/Header.vue";
 import NFTDataTable from "../components/NFTDataTable.vue";
-import Button from "../components/Button.vue";
+import KnockOffCreator from "../components/KnockOffCreator.vue";
 import { pathSegmentToChainID, chainIDToPathSegment } from "../chains";
 import { fetchKnockOffToken } from "../knockOffFetching.js";
 import { fetchERC721Metadata } from "../erc721MetadataFetching.js";
@@ -47,7 +51,7 @@ export default {
     Artwork,
     Header,
     NFTDataTable,
-    Button,
+    KnockOffCreator,
   },
   props: ["chain", "contractAddress", "tokenID"],
 
