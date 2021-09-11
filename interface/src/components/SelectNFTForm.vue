@@ -37,7 +37,8 @@
 </template>
 
 <script>
-import { chainNames } from "../chains.js";
+import { chainNames, chainIDToPathSegment } from "../chains.js";
+import { ethers } from "ethers";
 
 export default {
   name: "SelectNFTForm",
@@ -52,7 +53,16 @@ export default {
   },
 
   methods: {
-    async submit() {},
+    async submit() {
+      this.$router.push({
+        name: "original",
+        params: {
+          chain: chainIDToPathSegment(this.form.chainID),
+          contractAddress: ethers.utils.getAddress(this.form.contractAddress),
+          tokenID: ethers.BigNumber.from(this.form.tokenID).toString(),
+        },
+      });
+    },
   },
 };
 </script>
