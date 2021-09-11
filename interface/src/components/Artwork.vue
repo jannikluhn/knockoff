@@ -18,6 +18,13 @@
 </template>
 
 <script>
+import {
+  isIpfsUrl,
+  getIPFSGatewayURL,
+  isArweaveURL,
+  getArweaveGatewayURL,
+} from "../urls.js";
+
 export default {
   name: "Artwork",
   props: ["metadata", "error"],
@@ -25,7 +32,17 @@ export default {
   computed: {
     srcURL() {
       if (this.metadata) {
-        return this.metadata["image"];
+        const image = this.metadata["image"];
+        if (!image) {
+          return null;
+        }
+        if (isIpfsUrl(image)) {
+          return getIPFSGatewayURL(image);
+        }
+        if (isArweaveURL(image)) {
+          return getArweaveGatewayURL(image);
+        }
+        return image;
       }
       return null;
     },

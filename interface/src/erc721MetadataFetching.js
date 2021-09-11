@@ -3,6 +3,14 @@ import { throwError, errorCodes } from "./errors";
 import { providers } from "./chains.js";
 import { contractFactories } from "./contracts";
 import { getCORSProxyURL } from "./cors.js";
+import {
+  isDataURI,
+  getMetadataFromDataURI,
+  isIpfsUrl,
+  getIPFSGatewayURL,
+  isArweaveURL,
+  getArweaveGatewayURL,
+} from "./urls.js";
 
 let cache = {};
 
@@ -47,6 +55,17 @@ async function fetchJSONMetadataNoCache(chainID, contractAddress, tokenID) {
   }
   if (uri.length === 0) {
     throwError(errorCodes.CHAIN_ERROR, "ERC721 URI of token is empty");
+  }
+
+  if (isDataURI(uri)) {
+    return getMetadataFromDataURI(uri);
+  }
+
+  if (isIpfsUrl(uri)) {
+    uri = getIPFSGatewayURL(uri);
+  }
+  if (isArweaveURL(uri)) {
+    uri = getArweaveGatewayURL(uri);
   }
 
   const response = await window.fetch(getCORSProxyURL(uri));
