@@ -1,5 +1,5 @@
 <template>
-  <Gallery :maxTokens="10" />
+  <Gallery :initialNumTokens="3" :showMoreButton="true" />
 </template>
 
 <script>

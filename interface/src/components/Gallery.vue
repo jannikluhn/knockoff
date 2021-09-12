@@ -3,11 +3,21 @@
     class="sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 justify-items-center"
   >
     <Card
-      v-for="token in tokens"
+      v-for="token in shownTokens"
       :key="token.id"
       :token="token"
       :metadata="metadata[token.id]"
     />
+    <div v-if="showMoreButton">
+      <button
+        v-if="!this.fetching"
+        @click="numTokens += 3"
+        :disabled="fetchedAll || this.fetching"
+      >
+        Show more
+      </button>
+      <p v-else>Loading...</p>
+    </div>
   </div>
 </template>
 
@@ -20,7 +30,7 @@ import { logError } from "../errors.js";
 
 export default {
   name: "Gallery",
-  props: ["maxTokens"],
+  props: ["initialNumTokens", "exactNumTokens", "showMoreButton"],
 
   components: {
     Card,
@@ -28,22 +38,48 @@ export default {
 
   data() {
     return {
+      numTokens: 0,
       tokens: [],
       metadata: {},
       fetcher: null,
       fetching: false,
+      fetchedAll: false,
     };
   },
 
   watch: {
-    maxTokens: {
+    exactNumTokens: {
       immediate: true,
       handler() {
-        if (!this.fetching) {
-          this.fetchTokens();
+        if (this.exactNumTokens || this.exactNumTokens === 0) {
+          this.numTokens = this.exactNumTokens;
         }
       },
     },
+    initialNumTokens: {
+      immediate: true,
+      handler() {
+        if (!this.exactNumTokens && this.exactNumTokens !== 0) {
+          this.numTokens = Math.max(this.numTokens, this.initialNumTokens);
+        }
+      },
+    },
+    numTokens: {
+      immediate: true,
+      handler() {
+        this.fetchTokens();
+      },
+    },
+  },
+
+  computed: {
+    shownTokens() {
+      return this.tokens.slice(0, this.numTokens);
+    },
+  },
+
+  mounted() {
+    this.fetchTokens();
   },
 
   methods: {
@@ -58,7 +94,7 @@ export default {
       }
 
       try {
-        for (;;) {
+        while (this.tokens.length < this.numTokens) {
           let moreTokens;
           try {
             moreTokens = await this.fetcher.fetchMore();
@@ -74,9 +110,6 @@ export default {
 
           if (moreTokens.length == 0) {
             this.fetchedAll = true;
-            return;
-          }
-          if (this.tokens.length >= this.maxTokens) {
             return;
           }
         }
