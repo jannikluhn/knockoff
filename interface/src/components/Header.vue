@@ -1,5 +1,5 @@
 <template>
-  <div class="text-center p-5">
+  <div class="text-center">
     <h2 class=" font-extrabold italic uppercase text-3xl leading-8 my-3">
       {{ title }}
     </h2>

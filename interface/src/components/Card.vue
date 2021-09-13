@@ -1,24 +1,23 @@
 <template>
-  <router-link :to="routerLink">
-    <div
-      class="w-full my-4 rounded overflow-hidden border-2 border-black transform hover:-translate-y-0.5"
-    >
-      <img
-        class="w-full h-64 object-cover object-center"
-        :src="srcURL"
-        alt="NFT Artwork"
-      />
-      <div class="px-4 py-3 flex items-center justify-between">
-        <div class="">
-          <h2 class="font-extrabold italic uppercase text-xl mb-0.5 leading-5">
+  <router-link
+    :to="routerLink"
+    tag="div"
+    class="w-full aspect-w-4 aspect-h-5 rounded border-2 border-black transform hover:-translate-y-2 hover:shadow cursor-pointer transition"
+  >
+    <div>
+      <div class="w-full aspect-w-1 aspect-h-1">
+        <img
+          class="w-full h-full overflow-hidden object-cover"
+          :src="srcURL"
+          alt=" "
+        />
+      </div>
+      <div class="w-full aspect-w-4 aspect-h-1 pt-2">
+        <div class="px-2 flex flex-col justify-center items-center">
+          <h2 class="text-center font-bold text-xl mb-0.5 leading-5">
             {{ title }}
           </h2>
-          <p class="font-medium text-sm">
-            {{ mintDate }}
-          </p>
-        </div>
-        <div class="font-semi-bold italic text-3xl">
-          # {{ token.serialNumber }}
+          <p class="text-center">{{ mintDate }}</p>
         </div>
       </div>
     </div>
@@ -38,7 +37,7 @@ export default {
       if (this.metadata && this.metadata["name"]) {
         return this.metadata["name"];
       }
-      return "Unknown title";
+      return "Unknown Title";
     },
     mintDate() {
       return formatTimestampAsDate(this.token.mintTimestamp);

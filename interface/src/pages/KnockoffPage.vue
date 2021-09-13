@@ -1,44 +1,57 @@
 <template>
-  <div class="flex flex-col items-center py-8 xl:flex-row-reverse">
-    <p v-if="invalidTokenInputProps">Invalid URL params</p>
-    <p v-else-if="requestInProgress">Loading token...</p>
-    <p v-else-if="tokenFetchError">
+  <div class="flex flex-col items-center py-8">
+    <ErrorBox v-if="invalidTokenInputProps">
+      Invalid token URL.
+    </ErrorBox>
+    <div v-else-if="requestInProgress" class="pt-8 flex justify-center">
+      <BeatLoader color="black" />
+    </div>
+    <ErrorBox v-else-if="tokenFetchError">
       {{ tokenFetchError.message }}
-    </p>
-    <p v-else-if="!token">Token not found</p>
+    </ErrorBox>
+    <ErrorBox v-else-if="!token">
+      Token not found.
+    </ErrorBox>
+
     <div v-else>
-      <Artwork :metadata="metadata" :error="metadataFetchError" />
-      <div class="flex flex-col items-center xl:w-1/2 xl:px-3">
-        <Header
-          :isKnockOff="true"
-          :title="title"
-          :serialNumber="token.serialNumber"
-        />
-        <NFTDataTable
-          :chainID="chainID"
-          :contractAddress="contractAddress"
-          :tokenID="tokenID"
-          :owner="token.owner"
-          :mintTimestamp="token.mintTimestamp"
-        />
-        <KnockOffCreator
-          :chainID="chainID"
-          :contractAddress="contractAddress"
-          :tokenID="tokenID"
-        />
-        <router-link :to="originalLink">View Original</router-link>
+      <div class="grid grid-cols-1 lg:grid-cols-2 justify-center gap-8 pb-4">
+        <div class="flex flex-col justify-end lg:justify-center">
+          <Artwork :metadata="metadata" :error="metadataFetchError" />
+        </div>
+
+        <div class="flex flex-col justify-center gap-y-8">
+          <Header
+            :isKnockOff="true"
+            :title="title"
+            :serialNumber="token.serialNumber"
+          />
+          <NFTDataTable
+            :chainID="chainID"
+            :contractAddress="contractAddress"
+            :tokenID="tokenID"
+            :owner="token.owner"
+            :mintTimestamp="token.mintTimestamp"
+          />
+          <KnockOffCreator
+            :chainID="chainID"
+            :contractAddress="contractAddress"
+            :tokenID="tokenID"
+            :linkOriginal="true"
+          />
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { ethers } from "ethers";
+import BeatLoader from "vue-spinner/src/BeatLoader.vue";
 import Artwork from "../components/Artwork.vue";
 import Header from "../components/Header.vue";
 import NFTDataTable from "../components/NFTDataTable.vue";
 import KnockOffCreator from "../components/KnockOffCreator.vue";
-import { pathSegmentToChainID, chainIDToPathSegment } from "../chains";
+import ErrorBox from "../components/ErrorBox.vue";
+import { pathSegmentToChainID } from "../chains";
 import { fetchKnockOffToken } from "../knockOffFetching.js";
 import { fetchERC721Metadata } from "../erc721MetadataFetching.js";
 import { isValidAddress, isValidTokenID } from "../validation.js";
@@ -52,6 +65,8 @@ export default {
     Header,
     NFTDataTable,
     KnockOffCreator,
+    ErrorBox,
+    BeatLoader,
   },
   props: ["chain", "contractAddress", "tokenID"],
 
@@ -91,19 +106,6 @@ export default {
         return null;
       }
       return [this.chainID, this.contractAddress, this.tokenID];
-    },
-    originalLink() {
-      if (!this.invalidTokenInputProps) {
-        return {
-          name: "original",
-          params: {
-            chain: chainIDToPathSegment(this.chainID),
-            contractAddress: ethers.utils.getAddress(this.contractAddress),
-            tokenID: ethers.BigNumber.from(this.tokenID).toString(),
-          },
-        };
-      }
-      return null;
     },
 
     // request status

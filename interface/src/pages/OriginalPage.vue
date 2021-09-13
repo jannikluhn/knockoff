@@ -1,45 +1,61 @@
 <template>
-  <div class="flex flex-col items-center py-8 xl:flex-row-reverse">
-    <p v-if="invalidTokenInputProps">Invalid URL params</p>
-    <p v-else-if="requestInProgress">Loading...</p>
-    <p v-else-if="contractChainError || tokenChainError">
-      Failed to load data from blockchain:
+  <div>
+    <ErrorBox v-if="invalidTokenInputProps">
+      Invalid token URL.
+    </ErrorBox>
+    <div v-else-if="requestInProgress" class="pt-8 flex justify-center">
+      <BeatLoader color="black" />
+    </div>
+    <ErrorBox v-else-if="contractChainError || tokenChainError">
+      Failed to load data from the blockchain:
       {{
         contractChainError
           ? contractChainError.message
           : tokenChainError.message
       }}
-    </p>
-    <p v-else-if="!contractChain.hasCode">The given contract does not exist</p>
-    <p v-else-if="!contractChain.supportsIERC721">
-      The given contract is not an ERC721 token contract
-    </p>
-    <p v-else-if="!tokenChain.exists">The requested token does not exist</p>
-    <div v-else>
-      <p v-if="!contractChain.supportsIERC721">
-        The token contract does not have metadata.
-      </p>
-      <Artwork v-else :metadata="metadata" :error="metadataError" />
+    </ErrorBox>
+    <ErrorBox v-else-if="!contractChain.hasCode">
+      No contract was found at the given address.
+    </ErrorBox>
+    <ErrorBox v-else-if="!contractChain.supportsIERC721">
+      The given contract is not ERC721 compatible. For now, only these NFTs can
+      be knocked off.
+    </ErrorBox>
+    <ErrorBox v-else-if="!tokenChain.exists">
+      Token not found.
+    </ErrorBox>
 
-      <div class="flex flex-col items-center xl:w-1/2 xl:px-3">
-        <Header :isKnockOff="false" :title="title" />
-        <NFTDataTable
-          :chainID="chainID"
-          :contractAddress="contractAddress"
-          :tokenID="tokenID"
-          :owner="tokenChain.owner"
-        />
-        <KnockOffCreator
-          :chainID="chainID"
-          :contractAddress="contractAddress"
-          :tokenID="tokenID"
-        />
+    <div v-else>
+      <div class="grid grid-cols-1 lg:grid-cols-2 justify-center gap-8 pb-4">
+        <div class="flex flex-col justify-end lg:justify-center">
+          <ErrorBox v-if="!contractChain.supportsIERC721">
+            The token does not have any metadata.
+          </ErrorBox>
+          <Artwork v-else :metadata="metadata" :error="metadataError" />
+        </div>
+
+        <div class="flex flex-col justify-center gap-y-8">
+          <Header :isKnockOff="false" :title="title" />
+          <NFTDataTable
+            :chainID="chainID"
+            :contractAddress="contractAddress"
+            :tokenID="tokenID"
+            :owner="tokenChain.owner"
+          />
+          <KnockOffCreator
+            :chainID="chainID"
+            :contractAddress="contractAddress"
+            :tokenID="tokenID"
+          />
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import BeatLoader from "vue-spinner/src/BeatLoader.vue";
+import ErrorBox from "../components/ErrorBox.vue";
 import Artwork from "../components/Artwork.vue";
 import Header from "../components/Header.vue";
 import NFTDataTable from "../components/NFTDataTable.vue";
@@ -56,6 +72,8 @@ import { pathSegmentToChainID } from "../chains";
 export default {
   name: "OriginalPage",
   components: {
+    BeatLoader,
+    ErrorBox,
     Artwork,
     Header,
     NFTDataTable,

@@ -1,17 +1,20 @@
 <template>
-  <div id="app" class="items-center px-5 sm:px-20 md:px-40">
-    <router-link :to="{ name: 'landing' }">Landing</router-link>
-    <router-link :to="{ name: 'gallery' }">Gallery</router-link>
-    <router-link to="/original/ethereum/0xaabbcc/123">Original</router-link>
-    <router-link to="/knockoff/ethereum/0xffeedd/321">Knock Off</router-link>
-    <router-view></router-view>
+  <div id="app">
+    <NavBar />
+    <div class="container mx-auto px-2">
+      <router-view></router-view>
+    </div>
   </div>
 </template>
 
 <script>
+import NavBar from "./components/NavBar.vue";
+
 export default {
   name: "App",
-  components: {},
+  components: {
+    NavBar,
+  },
 
   data() {
     return {

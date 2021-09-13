@@ -1,6 +1,6 @@
 <template>
   <div
-    class="sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 justify-items-center"
+    class="grid justify-items-center gap-8 m-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
   >
     <Card
       v-for="token in shownTokens"
@@ -8,21 +8,33 @@
       :token="token"
       :metadata="metadata[token.id]"
     />
-    <div v-if="showMoreButton">
-      <button
-        v-if="!this.fetching"
-        @click="numTokens += 3"
-        :disabled="fetchedAll || this.fetching"
-      >
-        Show more
-      </button>
-      <p v-else>Loading...</p>
+    <div
+      v-if="showMoreButton && !fetchedAll"
+      class="w-full aspect-w-4 aspect-h-5"
+    >
+      <div class="w-full h-full">
+        <div class="aspect-none w-full h-full">
+          <div class="w-full h-full flex flex-col justify-center">
+            <div class="self-center">
+              <Button
+                v-if="!this.fetching"
+                @click="numTokens += 4"
+                :message="'Show more'"
+                :isPrimary="true"
+              />
+              <BeatLoader v-else color="black" />
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import BeatLoader from "vue-spinner/src/BeatLoader.vue";
 import Card from "./Card.vue";
+import Button from "./Button.vue";
 import { apolloClients } from "../apollo.js";
 import { RecentKnockOffFetcher } from "../recentKnockOffFetcher.js";
 import { fetchERC721Metadata } from "../erc721MetadataFetching.js";
@@ -34,6 +46,8 @@ export default {
 
   components: {
     Card,
+    BeatLoader,
+    Button,
   },
 
   data() {

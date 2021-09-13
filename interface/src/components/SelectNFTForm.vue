@@ -5,33 +5,37 @@
     @input="formErrors = []"
     :form-errors="formErrors"
     #default="{ hasErrors }"
-    class="w-full sm:w-96 my-12 mx-auto"
+    class="w-full max-w-screen-md space-y-2 mx-auto"
   >
     <FormulateInput
       name="chainID"
       type="select"
       :options="chainSelectOptions"
-      input-class="w-full sm:w-96 mt-2 px-4 py-1 rounded-full border-2 border-black font-medium capitalize"
+      input-class="w-full px-2 py-1 rounded-full border-2 border-black focus:ring-1 focus:ring-black"
     />
     <FormulateInput
       name="contractAddress"
       type="text"
-      validation="required|address"
-      placeholder="Enter NFT Contract Address"
-      input-class="w-full sm:w-96 mt-2 px-4 py-1 rounded-full border-2 border-black font-medium capitalize"
+      validation="bail|required|address"
+      validationName="contract address"
+      placeholder="Original NFT Contract Address"
+      input-class="w-full px-3 py-1 rounded-full border-2 border-black focus:ring-1 focus:ring-black"
+      errors-class="px-5 pt-2"
     />
     <FormulateInput
       name="tokenID"
       type="text"
-      validation="required|tokenID"
-      placeholder="Enter Token ID"
-      input-class="w-full sm:w-96 mt-2 px-4 py-1 rounded-full border-2 border-black font-medium capitalize"
+      validation="bail|required|tokenID"
+      validationName="token ID"
+      placeholder="Original NFT Token ID"
+      input-class="w-full px-3 py-1 rounded-full border-2 border-black focus:ring-1 focus:ring-black"
+      errors-class="px-5 pt-2"
     />
     <FormulateInput
       type="submit"
-      name="Find NFT"
+      name="Find NFT to Knock-Off"
       :disabled="hasErrors || validating"
-      input-class="w-full sm:w-96 mt-2 px-4 py-1 rounded-full border-2 border-black text-white uppercase bg-black font-bold"
+      input-class="py-1 px-10 rounded-full border-2 border-black text-white bg-black font-bold"
     />
   </FormulateForm>
 </template>

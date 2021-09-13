@@ -1,19 +1,13 @@
 <template>
-  <div class="xl:w-1/2">
-    <p v-if="error">
+  <div class="flex justify-center">
+    <ErrorBox v-if="error">
       {{ error.message }}
-    </p>
-    <p v-else-if="!srcURL">
-      Metadata does not contain image URL
-    </p>
+    </ErrorBox>
+    <ErrorBox v-else-if="!srcURL">
+      The metadata of the NFT does not contain an image.
+    </ErrorBox>
 
-    <p v-else>
-      <img
-        class="object-contain object-center"
-        :src="srcURL"
-        alt="NFT Artwork"
-      />
-    </p>
+    <img v-else class="object-contain object-center" :src="srcURL" alt=" " />
   </div>
 </template>
 
@@ -24,10 +18,14 @@ import {
   isArweaveURL,
   getArweaveGatewayURL,
 } from "../urls.js";
+import ErrorBox from "./ErrorBox.vue";
 
 export default {
   name: "Artwork",
   props: ["metadata", "error"],
+  components: {
+    ErrorBox,
+  },
 
   computed: {
     srcURL() {

@@ -1,29 +1,53 @@
 <template>
   <div>
-    <Button :isPrimary="true" message="knock-off" @click="onCreate" />
-    <p v-if="inProgress">{{ message }}</p>
-    <p v-if="error">{{ formattedError }}</p>
+    <div class="flex flex-col justify-content-center gap-y-2">
+      <div v-if="linkOriginal" class="mx-auto">
+        <Button
+          :isPrimary="false"
+          message="view original"
+          @click="$router.push(originalLink)"
+        />
+      </div>
+      <div class="mx-auto">
+        <Button :isPrimary="true" message="knock-off" @click="onCreate" />
+      </div>
+      <div v-if="inProgress" class="pt-8 flex flex-col justify-center">
+        <div class="flex justify-center">
+          <BeatLoader color="black" />
+        </div>
+        <div>
+          <p class="text-center">{{ message }}</p>
+        </div>
+      </div>
+      <ErrorBox v-if="error">
+        {{ formattedError }}
+      </ErrorBox>
+    </div>
   </div>
 </template>
 
 <script>
+import BeatLoader from "vue-spinner/src/BeatLoader.vue";
 import detectEthereumProvider from "@metamask/detect-provider";
 import { ethers } from "ethers";
 import Button from "./Button";
+import ErrorBox from "./ErrorBox";
 import {
   logError,
   formatErrorWithoutMessage,
   throwError,
   errorCodes,
 } from "../errors";
-import { chains } from "../chains";
+import { chains, chainIDToPathSegment } from "../chains";
 import { contractFactories } from "../contracts";
 
 export default {
   name: "KnockOffCreator",
-  props: ["chainID", "contractAddress", "tokenID"],
+  props: ["chainID", "contractAddress", "tokenID", "linkOriginal"],
   components: {
     Button,
+    ErrorBox,
+    BeatLoader,
   },
   data() {
     return {
@@ -40,7 +64,25 @@ export default {
       if (!this.error) {
         return null;
       }
+      if (this.error.obj) {
+        if (this.error.obj.code === -32002) {
+          return "A request is already in progress. Please check your wallet.";
+        }
+        if (this.error.obj.code === 4001) {
+          return "Transaction signature request denied.";
+        }
+      }
       return formatErrorWithoutMessage(this.error);
+    },
+    originalLink() {
+      return {
+        name: "original",
+        params: {
+          chain: chainIDToPathSegment(this.chainID),
+          contractAddress: ethers.utils.getAddress(this.contractAddress),
+          tokenID: ethers.BigNumber.from(this.tokenID).toString(),
+        },
+      };
     },
   },
 

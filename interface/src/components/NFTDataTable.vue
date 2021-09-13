@@ -1,19 +1,25 @@
 <template>
-  <table class="table-auto w-full my-4 mx-auto sm:w-72">
-    <tr v-for="row in tableRows" :key="row.label">
-      <td class="uppercase text-left" v-if="row.value !== null">
-        {{ row.label }}
-      </td>
-      <td class="font-medium capitalize text-right" v-if="row.value !== null">
-        {{ row.value }}
-      </td>
-    </tr>
+  <table class="table-fixed mx-auto">
+    <tbody>
+      <tr v-for="row in tableRows" :key="row.label">
+        <th class="text-left w-1/2" v-if="row.value !== null">
+          {{ row.label }}
+        </th>
+        <td class="font-medium capitalize text-right" v-if="row.value !== null">
+          {{ row.value }}
+        </td>
+      </tr>
+    </tbody>
   </table>
 </template>
 
 <script>
 import { chainNames } from "../chains.js";
-import { formatTimestampAsDate } from "../formatting.js";
+import {
+  formatTimestampAsDate,
+  formatTokenID,
+  formatAddress,
+} from "../formatting.js";
 
 export default {
   name: "NFTDataTable",
@@ -35,11 +41,14 @@ export default {
 
     tableRows() {
       return [
-        { label: "chain", value: this.chain },
-        { label: "contract address", value: this.contractAddress },
-        { label: "token id", value: this.tokenID },
-        { label: "owner", value: this.owner },
-        { label: "mint date", value: this.mintDateString },
+        { label: "Chain", value: this.chain },
+        {
+          label: "Contract address",
+          value: formatAddress(this.contractAddress),
+        },
+        { label: "Token ID", value: formatTokenID(this.tokenID) },
+        { label: "Owner", value: formatAddress(this.owner) },
+        { label: "Mint date", value: this.mintDateString },
       ];
     },
   },

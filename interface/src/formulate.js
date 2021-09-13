@@ -19,10 +19,10 @@ function setupFormulate() {
     locales: {
       en: {
         address: () => {
-          return "Please enter a valid Ethereum address";
+          return "Please enter a valid Ethereum address.";
         },
         tokenID: () => {
-          return "Please enter a valid token id";
+          return "Please enter a valid token ID.";
         },
       },
     },
