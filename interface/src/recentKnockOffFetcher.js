@@ -37,13 +37,48 @@ const recentKnockOffQuery = gql`
   }
 `;
 
+const recentKnockOffQueryWithOwner = gql`
+  query knockOffTokens($lastTimestamp: Int, $pageSize: Int, $owner: String) {
+    knockOffTokens(
+      orderBy: mintTimestamp
+      orderDirection: desc
+      first: $pageSize
+      where: { mintTimestamp_lt: $lastTimestamp, owner: $owner }
+    ) {
+      id
+      tokenID
+      serialNumber
+      ancestorSerialNumbers
+      mintTimestamp
+      owner
+
+      contract {
+        id
+        chainID
+        address
+      }
+
+      original {
+        id
+        tokenID
+        contract {
+          id
+          chainID
+          address
+        }
+      }
+    }
+  }
+`;
+
 class RecentKnockOffFetcher {
-  constructor(clients) {
+  constructor(clients, owner) {
     this.clients = clients;
     this.chainIDs = [];
     this.done = {};
     this.lastTimestamp = {};
     this.tooOldTokens = [];
+    this.owner = owner || null;
 
     for (const chainID in this.clients) {
       this.chainIDs.push(chainID);
@@ -74,12 +109,18 @@ class RecentKnockOffFetcher {
       }
 
       const client = this.clients[chainID];
+      let query = recentKnockOffQuery;
+      let vars = {
+        lastTimestamp: this.lastTimestamp[chainID],
+        pageSize: pageSize,
+      };
+      if (this.owner) {
+        query = recentKnockOffQueryWithOwner;
+        vars["owner"] = this.owner;
+      }
       const promise = client.query({
-        query: recentKnockOffQuery,
-        variables: {
-          lastTimestamp: this.lastTimestamp[chainID],
-          pageSize: pageSize,
-        },
+        query: query,
+        variables: vars,
       });
 
       queryPromises.push(promise);

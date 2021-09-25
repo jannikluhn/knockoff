@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 
 import LandingPage from "./pages/LandingPage.vue";
 import GalleryPage from "./pages/GalleryPage.vue";
+import WalletPage from "./pages/WalletPage.vue";
 import OriginalPage from "./pages/OriginalPage.vue";
 import KnockoffPage from "./pages/KnockoffPage.vue";
 import NotFoundPage from "./pages/NotFoundPage.vue";
@@ -21,6 +22,11 @@ const routes = [
     name: "gallery",
     path: "/gallery",
     component: GalleryPage,
+  },
+  {
+    name: "wallet",
+    path: "/wallet",
+    component: WalletPage,
   },
   {
     name: "original",
