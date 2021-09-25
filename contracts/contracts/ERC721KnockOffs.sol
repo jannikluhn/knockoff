@@ -15,13 +15,13 @@ struct Original {
 }
 
 contract ERC721KnockOffs is ERC721Enumerable, Ownable {
-    // TODO: add minter
     event Minted(
         IERC721Metadata originalContract,
         uint256 originalTokenID,
         address receiver,
         uint256 tokenID,
-        uint64 serialNumber
+        uint64 serialNumber,
+        address minter
     );
 
     error NonexistantToken(uint256 tokenID);
@@ -69,7 +69,8 @@ contract ERC721KnockOffs is ERC721Enumerable, Ownable {
             originalTokenID: originalTokenID,
             receiver: receiver,
             tokenID: tokenID,
-            serialNumber: serialNumber
+            serialNumber: serialNumber,
+            minter: msg.sender
         });
     }
 
