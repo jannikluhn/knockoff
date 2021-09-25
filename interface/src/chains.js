@@ -5,7 +5,7 @@ export const chains = {
     name: "Rinkeby",
     pathSegment: "rinkeby",
     chainID: 4,
-    erc721KnockOffsAddress: "0x6ed8558310F5236df59a021913313f8fb86c70F7",
+    erc721KnockOffsAddress: "0xDb2E7973D8e4d3ed5052f06d43462C41aEE6DF76",
     providerUrl:
       "https://rinkeby.infura.io/v3/cb47771bf3324acc895994de6752654b",
     graphUrl:
@@ -15,7 +15,7 @@ export const chains = {
     name: "Goerli",
     pathSegment: "goerli",
     chainID: 5,
-    erc721KnockOffsAddress: "0xe62e83aB3DC95Ac696ad3fa0bf16d4F93c6bbBc9",
+    erc721KnockOffsAddress: "0x5576f07713D3aBEd1677Ad50AF90a461364FA42d",
     providerUrl: "https://goerli.infura.io/v3/cb47771bf3324acc895994de6752654b",
     graphUrl:
       "https://api.thegraph.com/subgraphs/name/jannikluhn/knockoffs-goerli",

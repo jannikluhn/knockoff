@@ -7,8 +7,8 @@
         {
           "partial": "ERC721KnockOffs",
           "context": {
-            "address": "0x6ed8558310F5236df59a021913313f8fb86c70F7",
-            "startBlock": 9109541
+            "address": "0xDb2E7973D8e4d3ed5052f06d43462C41aEE6DF76",
+            "startBlock": 9354251
           }
         }
       ]
@@ -20,8 +20,8 @@
         {
           "partial": "ERC721KnockOffs",
           "context": {
-            "address": "0xe62e83aB3DC95Ac696ad3fa0bf16d4F93c6bbBc9",
-            "startBlock": 5314177
+            "address": "0x5576f07713D3aBEd1677Ad50AF90a461364FA42d",
+            "startBlock": 5559920
           }
         }
       ]
