@@ -40,6 +40,19 @@ import {
 } from "../errors";
 import { chains, chainIDToPathSegment } from "../chains";
 import { contractFactories } from "../contracts";
+import { waitForKnockOffToken } from "../knockOffFetching";
+import ERC721KnockOffsABI from "../assets/ERC721KnockOffsABI.json";
+
+function getMintLogDescriptionFromReceipt(receipt) {
+  if (receipt.logs.length != 2) {
+    throwError(errorCodes.TX_ERROR, "Transaction emitted unexpected events.");
+  }
+  const log = receipt.logs[1];
+
+  const iface = new ethers.utils.Interface(ERC721KnockOffsABI);
+  const logDescription = iface.parseLog(log);
+  return logDescription;
+}
 
 export default {
   name: "KnockOffCreator",
@@ -88,6 +101,10 @@ export default {
 
   methods: {
     async onCreate() {
+      if (this.inProgress) {
+        return;
+      }
+
       this.inProgress = true;
       this.error = null;
       this.message = null;
@@ -202,8 +219,9 @@ export default {
       }
 
       this.message = "Waiting for first transaction confirmation...";
+      var receipt;
       try {
-        await tx.wait();
+        receipt = await tx.wait();
       } catch (e) {
         throwError(
           errorCodes.TX_ERROR,
@@ -211,7 +229,25 @@ export default {
           e
         );
       }
-      this.message = "Transaction confirmed";
+
+      const log = getMintLogDescriptionFromReceipt(receipt);
+
+      this.message = "Waiting for knock off to be indexed...";
+      await waitForKnockOffToken(
+        this.chainID,
+        contract.address,
+        log.args.tokenID
+      );
+
+      this.message = "Redirecting to knock off page...";
+      this.$router.push({
+        name: "knockoff",
+        params: {
+          chain: chainIDToPathSegment(this.chainID),
+          contractAddress: ethers.utils.getAddress(contract.address),
+          tokenID: ethers.BigNumber.from(log.args.tokenID).toString(),
+        },
+      });
     },
   },
 };

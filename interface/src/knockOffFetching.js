@@ -41,7 +41,12 @@ function getKnockOffTokenID(chainID, contractAddress, tokenID) {
   ].join("-");
 }
 
-export async function fetchKnockOffToken(chainID, contractAddress, tokenID) {
+export async function fetchKnockOffToken(
+  chainID,
+  contractAddress,
+  tokenID,
+  queryArgs
+) {
   const knockOffTokenID = getKnockOffTokenID(chainID, contractAddress, tokenID);
 
   const client = apolloClients[chainID];
@@ -59,10 +64,29 @@ export async function fetchKnockOffToken(chainID, contractAddress, tokenID) {
       variables: {
         id: knockOffTokenID,
       },
+      ...queryArgs,
     });
   } catch (e) {
     throwError(errorCodes.APOLLO_ERROR, "failed to fetch knock off token", e);
   }
 
   return result.data.knockOffToken;
+}
+
+export async function waitForKnockOffToken(chainID, contractAddress, tokenID) {
+  const queryArgs = {
+    fetchPolicy: "network-only",
+  };
+  for (;;) {
+    const res = await fetchKnockOffToken(
+      chainID,
+      contractAddress,
+      tokenID,
+      queryArgs
+    );
+    if (res) {
+      return;
+    }
+    await new Promise((r) => setTimeout(r, 1000));
+  }
 }
