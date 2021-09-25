@@ -14,10 +14,12 @@
       </div>
       <div class="w-full aspect-w-4 aspect-h-1 pt-2">
         <div class="px-2 flex flex-col justify-center items-center">
-          <h2 class="text-center font-bold text-xl mb-0.5 leading-5">
-            {{ title }}
-          </h2>
-          <p class="text-center">{{ mintDate }}</p>
+          <div class="overflow-hidden">
+            <h2 class="text-center font-bold text-xl mb-0.5 leading-5">
+              {{ title }}
+            </h2>
+            <p class="text-center">{{ mintDate }}</p>
+          </div>
         </div>
       </div>
     </div>
