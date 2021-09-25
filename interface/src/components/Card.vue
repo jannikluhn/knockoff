@@ -16,7 +16,7 @@
         <div class="px-2 flex flex-col justify-center items-center">
           <div class="overflow-hidden">
             <h2 class="text-center font-bold text-xl mb-0.5 leading-5">
-              {{ title }}
+              {{ titleCropped }}
             </h2>
             <p class="text-center">{{ mintDate }}</p>
           </div>
@@ -30,6 +30,8 @@
 import { chainIDToPathSegment } from "../chains";
 import { formatTimestampAsDate } from "../formatting";
 
+const maxTitleLength = 40;
+
 export default {
   name: "Card",
   props: ["token", "metadata"],
@@ -40,6 +42,12 @@ export default {
         return this.metadata["name"];
       }
       return "Unknown Title";
+    },
+    titleCropped() {
+      if (this.title.length <= maxTitleLength) {
+        return this.title;
+      }
+      return this.title.substring(0, maxTitleLength - 3) + "...";
     },
     mintDate() {
       return formatTimestampAsDate(this.token.mintTimestamp);
