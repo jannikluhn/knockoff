@@ -62,7 +62,7 @@ contract ERC721KnockOffs is ERC721Enumerable, Ownable {
         // Store the original as well as the knock off's serial number and mint the token.
         originals[_originalID] = original;
         serialNumbers[tokenID] = serialNumber;
-        _mint(receiver, tokenID); // TODO: use _safeMint
+        _safeMint(receiver, tokenID);
 
         emit Minted({
             originalContract: originalContract,
