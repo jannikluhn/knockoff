@@ -24,6 +24,7 @@
             :isKnockOff="true"
             :title="title"
             :serialNumber="token.serialNumber"
+            :ancestorSerialNumbers="token.ancestorSerialNumbers"
           />
           <NFTDataTable
             :chainID="chainID"

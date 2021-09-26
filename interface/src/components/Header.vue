@@ -14,13 +14,17 @@
 <script>
 export default {
   name: "Header",
-  props: ["isKnockOff", "serialNumber", "title"],
+  props: ["isKnockOff", "serialNumber", "ancestorSerialNumbers", "title"],
   computed: {
     label() {
       if (this.isKnockOff) {
         let s = "knock-off";
         if (this.serialNumber || this.serialNumber === 0) {
-          s += " #" + this.serialNumber.toString();
+          s += " #";
+          for (const i of this.ancestorSerialNumbers || []) {
+            s += i.toString() + ".";
+          }
+          s += this.serialNumber.toString();
         }
         return s;
       } else {
