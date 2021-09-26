@@ -1,23 +1,23 @@
 <template>
-  <nav class="bg-white shadow-md mb-8">
+  <nav class="bg-white mb-8 relative z-50 shadow-md">
     <div class="px-4 flex justify-between">
       <router-link
-        class="py-4 cursor-pointer border-b-2 border-opacity-0"
+        class="py-4 cursor-pointer uppercase font-bold border-b-2 border-opacity-0"
         :to="{ name: 'landing' }"
       >
-        Beautiful Logo
+        <img src="../assets/logo.png" alt="" class="w-56" />
       </router-link>
 
       <div class="flex justify-right">
         <router-link
-          class="h-full py-4 px-4 cursor-pointer hover:border-b-2 border-blue-500"
+          class="h-full py-4 px-4 cursor-pointer hover:border-b-2 border-blue-500 font-medium"
           :class="walletSelected ? 'border-b-2' : ''"
           :to="{ name: 'wallet' }"
         >
           Wallet
         </router-link>
         <router-link
-          class="h-full py-4 px-4 cursor-pointer hover:border-b-2 border-blue-500"
+          class="h-full py-4 px-4 cursor-pointer hover:border-b-2 border-blue-500 font-medium"
           :class="gallerySelected ? 'border-b-2' : ''"
           :to="{ name: 'gallery' }"
         >

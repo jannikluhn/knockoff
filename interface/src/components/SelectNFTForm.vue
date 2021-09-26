@@ -5,7 +5,7 @@
     @input="formErrors = []"
     :form-errors="formErrors"
     #default="{ hasErrors }"
-    class="w-full max-w-screen-md space-y-2 mx-auto"
+    class="w-full max-w-lg space-y-2 mx-auto"
   >
     <FormulateInput
       name="chainID"
@@ -35,7 +35,7 @@
       type="submit"
       name="Find NFT to Knock-Off"
       :disabled="hasErrors || validating"
-      input-class="py-1 px-10 rounded-full border-2 border-black text-white bg-black font-bold"
+      input-class="w-full py-1 px-10 rounded-full border-2 border-black text-white bg-black font-bold"
     />
   </FormulateForm>
 </template>
