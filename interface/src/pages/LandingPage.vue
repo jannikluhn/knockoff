@@ -1,7 +1,7 @@
 <template>
   <div>
     <div
-      class="opacity-0 sm:opacity-100 bg-white z-0 absolute top-0 left-o w-11/12 h-screen grid grid-cols-5 auto-rows-auto gap-0.5 items-center justify-items-center"
+      class="opacity-0 sm:opacity-100 bg-white z-0 absolute top-0 left-8 w-11/12 h-screen grid grid-cols-5 auto-rows-auto gap-0.5 items-center justify-items-center"
       style="z-index= -100;"
     >
       <img
