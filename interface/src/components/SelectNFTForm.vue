@@ -33,7 +33,7 @@
     />
     <FormulateInput
       type="submit"
-      name="Find NFT to Knock-Off"
+      name="Show NFT!!!"
       :disabled="hasErrors || validating"
       input-class="w-full py-1 px-10 rounded-full border-2 border-black text-white bg-black font-bold"
     />

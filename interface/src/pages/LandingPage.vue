@@ -90,9 +90,9 @@
       class="sm:mix-blend-difference sm:text-white relative md:w-2/3 mx-auto text-center"
     >
       <h1 class="px-9 pt-20 text-3xl sm:text-6xl font-extrabold italic">
-        Are you too poor for NFTs?
+        Are you too poor for NFTs???
         <br />
-        Get a Knockoff!
+        Get a Knockoff!!!
       </h1>
     </div>
 
