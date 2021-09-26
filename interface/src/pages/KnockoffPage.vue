@@ -37,6 +37,8 @@
             :contractAddress="contractAddress"
             :tokenID="tokenID"
             :linkOriginal="true"
+            :originalContractAddress="token.original.contract.address"
+            :originalTokenID="token.original.tokenID"
           />
         </div>
       </div>

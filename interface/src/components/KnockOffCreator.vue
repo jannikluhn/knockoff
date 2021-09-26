@@ -56,7 +56,14 @@ function getMintLogDescriptionFromReceipt(receipt) {
 
 export default {
   name: "KnockOffCreator",
-  props: ["chainID", "contractAddress", "tokenID", "linkOriginal"],
+  props: [
+    "chainID",
+    "contractAddress",
+    "tokenID",
+    "linkOriginal",
+    "originalContractAddress",
+    "originalTokenID",
+  ],
   components: {
     Button,
     ErrorBox,
@@ -92,8 +99,10 @@ export default {
         name: "original",
         params: {
           chain: chainIDToPathSegment(this.chainID),
-          contractAddress: ethers.utils.getAddress(this.contractAddress),
-          tokenID: ethers.BigNumber.from(this.tokenID).toString(),
+          contractAddress: ethers.utils.getAddress(
+            this.originalContractAddress
+          ),
+          tokenID: ethers.BigNumber.from(this.originalTokenID).toString(),
         },
       };
     },
