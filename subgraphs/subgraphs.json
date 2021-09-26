@@ -25,6 +25,32 @@
           }
         }
       ]
+    },
+    "mainnet": {
+      "network": "mainnet",
+      "chainID": 1,
+      "dataSources": [
+        {
+          "partial": "ERC721KnockOffs",
+          "context": {
+            "address": "0xB6610B13496f42fa72BBa6a0ca20e5b72a11CE39",
+            "startBlock": 13302548
+          }
+        }
+      ]
+    },
+    "xdai": {
+      "network": "xdai",
+      "chainID": 100,
+      "dataSources": [
+        {
+          "partial": "ERC721KnockOffs",
+          "context": {
+            "address": "0x756ce48FbF69338027040A11DC2d510Ef03dd3f7",
+            "startBlock": 18282452
+          }
+        }
+      ]
     }
   }
 }
