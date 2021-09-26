@@ -6,12 +6,16 @@
     <div v-else-if="requestInProgress" class="pt-8 flex justify-center">
       <BeatLoader color="black" />
     </div>
-    <ErrorBox v-else-if="contractChainError || tokenChainError">
+    <ErrorBox
+      v-else-if="contractChainError || tokenChainError || tokenAsKnockOffError"
+    >
       Failed to load data from the blockchain:
       {{
         contractChainError
           ? contractChainError.message
-          : tokenChainError.message
+          : tokenChainError
+          ? tokenChainError.message
+          : tokenAsKnockOffError.message
       }}
     </ErrorBox>
     <ErrorBox v-else-if="!contractChain.hasCode">
@@ -35,7 +39,12 @@
         </div>
 
         <div class="flex flex-col justify-center gap-y-8">
-          <Header :isKnockOff="false" :title="title" />
+          <Header
+            :isKnockOff="isKnockOff"
+            :serialNumber="knockOffSerialNumber"
+            :ancestorSerialNumbers="knockOffAncestorSerialNumbers"
+            :title="title"
+          />
           <NFTDataTable
             :chainID="chainID"
             :contractAddress="contractAddress"
@@ -68,6 +77,7 @@ import {
 import { fetchERC721Metadata } from "../erc721MetadataFetching";
 import { isValidAddress, isValidTokenID } from "../validation";
 import { pathSegmentToChainID } from "../chains";
+import { fetchKnockOffToken } from "../knockOffFetching";
 
 export default {
   name: "OriginalPage",
@@ -87,10 +97,12 @@ export default {
       tokenChain: null,
       tokenGraph: null,
       metadata: null,
+      tokenAsKnockOff: null,
       contractChainError: null,
       tokenChainError: null,
       tokenGraphError: null,
       metadataError: null,
+      tokenAsKnockOffError: null,
 
       requestCounter: 0,
       currentRequest: null,
@@ -134,6 +146,22 @@ export default {
       }
       return "Unknown Title";
     },
+
+    isKnockOff() {
+      return this.tokenAsKnockOff !== null;
+    },
+    knockOffSerialNumber() {
+      if (!this.tokenAsKnockOff) {
+        return null;
+      }
+      return this.tokenAsKnockOff.serialNumber;
+    },
+    knockOffAncestorSerialNumbers() {
+      if (!this.tokenAsKnockOff) {
+        return null;
+      }
+      return this.tokenAsKnockOff.ancestorSerialNumbers;
+    },
   },
 
   watch: {
@@ -155,10 +183,12 @@ export default {
       this.tokenChain = null;
       this.tokenGraph = null;
       this.metadata = null;
+      this.tokenAsKnockOff = null;
       this.contractChainError = null;
       this.tokenChainError = null;
       this.tokenGraphError = null;
       this.metadataError = null;
+      this.tokenAsKnockOffError = null;
 
       try {
         if (!this.tokenInputProps) {
@@ -243,6 +273,23 @@ export default {
           }
           this.tokenGraph = tokenGraph;
           this.tokenGraphError = tokenGraphError;
+
+          let tokenAsKnockOff;
+          let tokenAsKnockOffError;
+          try {
+            tokenAsKnockOff = await fetchKnockOffToken(
+              this.chainID,
+              this.contractAddress,
+              this.tokenID
+            );
+          } catch (e) {
+            tokenAsKnockOffError = e;
+          }
+          if (this.currentRequest !== requestID) {
+            return;
+          }
+          this.tokenAsKnockOff = tokenAsKnockOff;
+          this.tokenAsKnockOffError = tokenAsKnockOffError;
         }
       } finally {
         this.currentRequest = null;
