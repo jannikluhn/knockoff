@@ -5,23 +5,23 @@
         class="h-full py-4 px-4 cursor-pointer font-medium"
         href="https://medium.com"
       >
-        Blog
+        WTF
       </a>
       <a
         class="h-full py-4 px-4 cursor-pointer font-medium"
-        href="https://medium.com"
+        href="https://github.com/jannikluhn/knockoff"
       >
         Github
       </a>
       <a
         class="h-full py-4 px-4 cursor-pointer font-medium"
-        href="https://medium.com"
+        href="https://twitter.com/knockoffNFT"
       >
         Twitter
       </a>
       <a
         class="h-full py-4 px-4 cursor-pointer font-medium"
-        href="https://medium.com"
+        href="https://discord.gg/N8znRNd3"
       >
         Discord
       </a>
