@@ -21,7 +21,7 @@
       </a>
       <a
         class="h-full py-4 px-4 cursor-pointer font-medium"
-        href="https://discord.gg/N8znRNd3"
+        href="https://discord.gg/fu7B4jRECB"
       >
         Discord
       </a>
