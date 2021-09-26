@@ -92,7 +92,7 @@
       <h1 class="px-9 pt-20 text-3xl sm:text-6xl font-extrabold italic">
         Are you too poor for NFTs???
         <br />
-        Get a Knockoff!!!
+        Get a knockoff!!!
       </h1>
     </div>
 
