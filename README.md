@@ -1,18 +1,24 @@
-# Interface
+# Too poor for NFTs??? Get a knockoff!!!
+
+## Deployment
+
+- Mainnet: `0xB6610B13496f42fa72BBa6a0ca20e5b72a11CE39`
+- xDai: `0x756ce48FbF69338027040A11DC2d510Ef03dd3f7`
+- Rinkeby: `0xDb2E7973D8e4d3ed5052f06d43462C41aEE6DF76`
+- Goerli: `0x5576f07713D3aBEd1677Ad50AF90a461364FA42d`
+
+## Development
+
+### Interface
 
 In the `interface/` subdirectory:
 
 - Run `npm install`
 - Run `npm run serve`
 
-In the `corsproxy/` subdirectory:
-
-- Run `npm install`
-- Run `npm start`
-
 Now, the dapp interface is served at [http://localhost:8080/]().
 
-# Contracts
+### Contracts
 
 The contracts are in the `contracts/` subdirectory. Run `npm install`
 to install the dependencies. To deploy the contracts, first create a
