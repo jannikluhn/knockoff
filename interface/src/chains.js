@@ -12,7 +12,7 @@ export const chains = {
       "https://api.thegraph.com/subgraphs/name/jannikluhn/knockoffs-mainnet",
   },
   100: {
-    name: "XDai",
+    name: "xDai",
     pathSegment: "xdai",
     chainID: 100,
     erc721KnockOffsAddress: "0x756ce48FbF69338027040A11DC2d510Ef03dd3f7",
