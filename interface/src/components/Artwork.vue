@@ -7,7 +7,19 @@
       The metadata of the NFT does not contain an image.
     </ErrorBox>
 
-    <img v-else class="object-contain object-center" :src="srcURL" alt=" " />
+    <img
+      v-else-if="!isVideo"
+      class="object-contain object-center"
+      :src="srcURL"
+      alt=" "
+    />
+    <video
+      :src="srcURL"
+      loop
+      autoplay
+      playsinline
+      class="object-contain object-center"
+    ></video>
   </div>
 </template>
 
@@ -43,6 +55,12 @@ export default {
         return image;
       }
       return null;
+    },
+    isVideo() {
+      if (!this.srcURL) {
+        return false;
+      }
+      return this.srcURL.endsWith(".mp4");
     },
   },
 };
