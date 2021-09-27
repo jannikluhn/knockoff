@@ -1,5 +1,5 @@
 <template>
-  <footer class="border-t-2 border-gray-100 relative z-50">
+  <footer class="z-50 bottom-0 w-full float-left fixed">
     <div class="px-4 flex justify-end">
       <a
         class="h-full py-4 px-4 cursor-pointer font-medium"
