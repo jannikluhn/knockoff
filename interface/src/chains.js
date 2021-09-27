@@ -20,6 +20,16 @@ export const chains = {
     graphUrl:
       "https://api.thegraph.com/subgraphs/name/jannikluhn/knockoffs-xdai",
   },
+  137: {
+    name: "Polygon",
+    pathSegment: "polygon",
+    chainID: 137,
+    erc721KnockOffsAddress: "0x09761ffd493B7d15FdA56A270d93aE60954404d8",
+    providerUrl:
+      "https://polygon-mainnet.infura.io/v3/cb47771bf3324acc895994de6752654b",
+    graphUrl:
+      "https://api.thegraph.com/subgraphs/name/jannikluhn/knockoffs-matic",
+  },
 };
 
 export const chainNames = Object.fromEntries(

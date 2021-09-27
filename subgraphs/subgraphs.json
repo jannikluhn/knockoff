@@ -51,6 +51,19 @@
           }
         }
       ]
+    },
+    "matic": {
+      "network": "matic",
+      "chainID": 137,
+      "dataSources": [
+        {
+          "partial": "ERC721KnockOffs",
+          "context": {
+            "address": "0x09761ffd493B7d15FdA56A270d93aE60954404d8",
+            "startBlock": 19579368
+          }
+        }
+      ]
     }
   }
 }
