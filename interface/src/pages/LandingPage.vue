@@ -5,11 +5,11 @@
       alt=""
       width="100%"
       height="100%"
-      class="absolute top-8 left-0 w-full overflow-hidden m-0"
+      class="opacity-0 lg:opacity-100 absolute top-8 left-0 w-full overflow-hidden m-0"
     >
 
     <div
-      class="sm:mix-blend-difference sm:text-white relative md:w-2/3 mx-auto text-center"
+      class="lg:mix-blend-difference lg:text-white relative md:w-2/3 mx-auto text-center"
     >
       <h1 class="px-9 pt-20 text-3xl sm:text-6xl font-extrabold italic">
         Are you too poor for NFTs???
