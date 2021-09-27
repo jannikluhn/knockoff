@@ -1,4 +1,4 @@
-export const corsProxy = "http://139.59.138.119/";
+export const corsProxy = "https://cors.knockoff.lol/";
 
 export function getCORSProxyURL(url) {
   return corsProxy + url;
