@@ -10,12 +10,20 @@ import {
 import { OriginalContract } from "../generated/schema";
 import { OriginalToken } from "../generated/schema";
 
-export function handleMinted4(event: Minted): void {
-  handleMinted(4, event);
+export function handleMinted1(event: Minted): void {
+  handleMinted(1, event);
 }
 
 export function handleMinted5(event: Minted): void {
   handleMinted(5, event);
+}
+
+export function handleMinted100(event: Minted): void {
+  handleMinted(100, event);
+}
+
+export function handleMinted137(event: Minted): void {
+  handleMinted(137, event);
 }
 
 function getContractID(
