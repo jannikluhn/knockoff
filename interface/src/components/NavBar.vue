@@ -1,5 +1,5 @@
 <template>
-  <nav class="bg-white mb-8 relative z-50 shadow-md">
+  <nav class="bg-white relative z-50 shadow-md">
     <div class="px-4 flex justify-between">
       <router-link
         class="py-4 cursor-pointer uppercase font-bold border-b-2 border-opacity-0"
