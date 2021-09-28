@@ -63,7 +63,10 @@ export default {
       return formatTimestampAsDate(this.token.mintTimestamp);
     },
     srcURL() {
-      if (this.metadata && this.metadata["image"]) {
+      if (
+        this.metadata &&
+        (this.metadata["image"] || this.metadata["imageUrl"])
+      ) {
         return getSourceURL(this.metadata);
       }
       return "";
