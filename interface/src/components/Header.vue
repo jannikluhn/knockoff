@@ -18,7 +18,7 @@ export default {
   computed: {
     label() {
       if (this.isKnockOff) {
-        let s = "knock off";
+        let s = "knockoff";
         if (this.serialNumber || this.serialNumber === 0) {
           s += " #";
           for (const i of this.ancestorSerialNumbers || []) {
