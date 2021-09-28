@@ -42,7 +42,7 @@ export default {
   computed: {
     srcURL() {
       if (this.metadata) {
-        const image = this.metadata["image"];
+        const image = this.metadata["image"] || this.metadata["imageUrl"];
         if (!image) {
           return null;
         }
