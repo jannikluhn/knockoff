@@ -19,7 +19,7 @@
     </div>
     <Gallery
       v-else
-      :initialNumTokens="5"
+      :initialNumTokens="8"
       :showMoreButton="true"
       :owner="account"
     />

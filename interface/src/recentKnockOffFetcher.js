@@ -1,7 +1,7 @@
 import gql from "graphql-tag";
 import { INT32_MAX } from "./constants.js";
 
-const pageSize = 2;
+const pageSize = 4;
 
 const recentKnockOffQuery = gql`
   query knockOffTokens($lastTimestamp: Int, $pageSize: Int) {
