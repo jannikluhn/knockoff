@@ -48,3 +48,21 @@ export function getMetadataFromDataURI(uri) {
     );
   }
 }
+
+export function getSourceURL(metadata) {
+  const image = metadata["image"] || metadata["imageUrl"];
+  if (!image) {
+    return null;
+  }
+  if (isIpfsUrl(image)) {
+    return getIPFSGatewayURL(image);
+  }
+  if (isArweaveURL(image)) {
+    return getArweaveGatewayURL(image);
+  }
+  return image;
+}
+
+export function isVideoURL(srcURL) {
+  return srcURL.endsWith(".mp4");
+}

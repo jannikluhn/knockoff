@@ -24,12 +24,7 @@
 </template>
 
 <script>
-import {
-  isIpfsUrl,
-  getIPFSGatewayURL,
-  isArweaveURL,
-  getArweaveGatewayURL,
-} from "../urls.js";
+import { getSourceURL, isVideoURL } from "../urls.js";
 import ErrorBox from "./ErrorBox.vue";
 
 export default {
@@ -42,17 +37,7 @@ export default {
   computed: {
     srcURL() {
       if (this.metadata) {
-        const image = this.metadata["image"] || this.metadata["imageUrl"];
-        if (!image) {
-          return null;
-        }
-        if (isIpfsUrl(image)) {
-          return getIPFSGatewayURL(image);
-        }
-        if (isArweaveURL(image)) {
-          return getArweaveGatewayURL(image);
-        }
-        return image;
+        return getSourceURL(this.metadata);
       }
       return null;
     },
@@ -60,7 +45,7 @@ export default {
       if (!this.srcURL) {
         return false;
       }
-      return this.srcURL.endsWith(".mp4");
+      return isVideoURL(this.srcURL);
     },
   },
 };

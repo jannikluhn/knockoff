@@ -7,10 +7,19 @@
     <div>
       <div class="w-full aspect-w-1 aspect-h-1">
         <img
+          v-if="!isVideo"
           class="w-full h-full overflow-hidden object-cover"
           :src="srcURL"
           alt=" "
         />
+        <video
+          v-else
+          :src="srcURL"
+          loop
+          autoplay
+          playsinline
+          class="object-contain object-center"
+        ></video>
       </div>
       <div class="w-full aspect-w-4 aspect-h-1 pt-2">
         <div class="px-2 flex flex-col justify-center items-center">
@@ -29,6 +38,7 @@
 <script>
 import { chainIDToPathSegment } from "../chains";
 import { formatTimestampAsDate } from "../formatting";
+import { isVideoURL, getSourceURL } from "../urls";
 
 const maxTitleLength = 40;
 
@@ -54,9 +64,15 @@ export default {
     },
     srcURL() {
       if (this.metadata && this.metadata["image"]) {
-        return this.metadata["image"];
+        return getSourceURL(this.metadata);
       }
       return "";
+    },
+    isVideo() {
+      if (!this.srcURL) {
+        return isVideoURL(this.srcURL);
+      }
+      return this.srcURL.endsWith(".mp4");
     },
     routerLink() {
       return {
