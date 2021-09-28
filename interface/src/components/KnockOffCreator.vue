@@ -124,7 +124,7 @@ export default {
         const address = await this.requestAccounts(provider);
         await this.sendTransaction(provider, address);
       } catch (e) {
-        logError("error creating knock off", e);
+        logError("error creating knockoff", e);
         this.error = e;
       } finally {
         this.inProgress = false;
@@ -241,14 +241,14 @@ export default {
 
       const log = getMintLogDescriptionFromReceipt(receipt);
 
-      this.message = "Waiting for knock off to be indexed...";
+      this.message = "Waiting for knockoff to be indexed...";
       await waitForKnockOffToken(
         this.chainID,
         contract.address,
         log.args.tokenID
       );
 
-      this.message = "Redirecting to knock off page...";
+      this.message = "Redirecting to knockoff page...";
       this.$router.push({
         name: "knockoff",
         params: {

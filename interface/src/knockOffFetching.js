@@ -67,7 +67,7 @@ export async function fetchKnockOffToken(
       ...queryArgs,
     });
   } catch (e) {
-    throwError(errorCodes.APOLLO_ERROR, "failed to fetch knock off token", e);
+    throwError(errorCodes.APOLLO_ERROR, "failed to fetch knockoff token", e);
   }
 
   return result.data.knockOffToken;

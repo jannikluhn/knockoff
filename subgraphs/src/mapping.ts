@@ -96,13 +96,11 @@ function updateOriginalToken(
 
 function updateKnockOffContract(chainID: i32, event: Minted): KnockOffContract {
   let knockOffContractID = getKnockOffContractID(chainID, event.address);
-  log.debug("updating knock off contract with id {}", [knockOffContractID]);
+  log.debug("updating knockoff contract with id {}", [knockOffContractID]);
   let knockOffContract = KnockOffContract.load(knockOffContractID);
 
   if (knockOffContract == null) {
-    log.info("creating new knock off contract with id {}", [
-      knockOffContractID,
-    ]);
+    log.info("creating new knockoff contract with id {}", [knockOffContractID]);
     knockOffContract = new KnockOffContract(knockOffContractID);
     knockOffContract.type = "ERC721";
     knockOffContract.address = event.address;
@@ -137,7 +135,7 @@ function getAncestorSerialNumbers(
     );
     let originalAsKnockOffToken = KnockOffToken.load(originalAsKnockOffTokenID);
     if (originalAsKnockOffToken == null) {
-      log.critical("original {} is knock off, but not indexed", [
+      log.critical("original {} is knockoff, but not indexed", [
         originalAsKnockOffToken.id,
       ]);
     }
@@ -162,7 +160,7 @@ function createKnockOffToken(
   let knockOffTokenID = getTokenID(knockOffContract.id, event.params.tokenID);
   let knockOffToken = KnockOffToken.load(knockOffTokenID);
   if (knockOffToken != null) {
-    log.error("tried to create duplicate knock off with id {}", [
+    log.error("tried to create duplicate knockoff with id {}", [
       knockOffTokenID,
     ]);
     return null;

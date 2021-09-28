@@ -43,7 +43,7 @@ async function fetchOriginalTokenGraph(chainID, contractAddress, tokenID) {
       },
     });
   } catch (e) {
-    throwError(errorCodes.APOLLO_ERROR, "failed to fetch knock off token", e);
+    throwError(errorCodes.APOLLO_ERROR, "failed to fetch knockoff token", e);
   }
 
   return result.data.originalToken;
