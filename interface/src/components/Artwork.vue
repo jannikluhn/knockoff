@@ -14,6 +14,7 @@
       alt=" "
     />
     <video
+      v-else-if="isVideo"
       :src="srcURL"
       loop
       autoplay

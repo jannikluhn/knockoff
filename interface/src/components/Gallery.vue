@@ -22,7 +22,7 @@
               <div class="self-center">
                 <Button
                   v-if="!this.fetching"
-                  @click="numTokens += 4"
+                  @click="numTokens += 6"
                   :message="'Show more'"
                   :isPrimary="true"
                 />
