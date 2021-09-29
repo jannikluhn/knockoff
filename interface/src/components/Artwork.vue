@@ -1,5 +1,5 @@
 <template>
-  <div class="flex justify-center">
+  <div>
     <ErrorBox v-if="error">
       {{ error.message }}
     </ErrorBox>
@@ -14,6 +14,7 @@
       alt=" "
     />
     <video
+      v-else-if="isVideo"
       :src="srcURL"
       loop
       autoplay

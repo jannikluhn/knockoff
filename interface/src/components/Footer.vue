@@ -1,6 +1,6 @@
 <template>
-  <footer class="border-t-2 border-gray-100 relative z-50">
-    <div class="px-4 flex justify-end">
+  <footer class="relative z-50">
+    <div class="px-4 flex justify-center sm:justify-end text-sm sm:text-base">
       <a
         class="h-full py-4 px-4 cursor-pointer font-medium"
         href="https://medium.com"

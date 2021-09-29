@@ -5,20 +5,20 @@
         class="py-4 cursor-pointer uppercase font-bold border-b-2 border-opacity-0"
         :to="{ name: 'landing' }"
       >
-        <img src="../assets/logo.png" alt="" class="w-56" />
+        <img src="../assets/Logo.svg" alt="" class="w-56" />
       </router-link>
 
-      <div class="flex justify-right">
+      <div class="flex justify-right text-sm sm:text-base sm:text-gray-500">
         <router-link
-          class="h-full py-4 px-4 cursor-pointer hover:border-b-2 border-blue-500 font-medium"
-          :class="walletSelected ? 'border-b-2' : ''"
+          class="h-full py-4 pl-5 cursor-pointer hover:text-black font-medium"
+          :class="walletSelected ? 'text-black' : ''"
           :to="{ name: 'wallet' }"
         >
           Wallet
         </router-link>
         <router-link
-          class="h-full py-4 px-4 cursor-pointer hover:border-b-2 border-blue-500 font-medium"
-          :class="gallerySelected ? 'border-b-2' : ''"
+          class="h-full py-4 pl-3 cursor-pointer hover:text-black font-medium"
+          :class="gallerySelected ? 'text-black' : ''"
           :to="{ name: 'gallery' }"
         >
           Gallery

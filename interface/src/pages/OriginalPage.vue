@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <div class="flex flex-col items-center py-8">
     <ErrorBox v-if="invalidTokenInputProps">
       Invalid token URL.
     </ErrorBox>
-    <div v-else-if="requestInProgress" class="pt-8 flex justify-center">
+    <div v-else-if="requestInProgress" class="pt-8 flex justify-center items-center h-96">
       <BeatLoader color="black" />
     </div>
     <ErrorBox
@@ -30,7 +30,7 @@
     </ErrorBox>
 
     <div v-else>
-      <div class="grid grid-cols-1 lg:grid-cols-2 justify-center gap-8 pb-4">
+      <div class="grid grid-cols-1 lg:grid-cols-2 justify-center gap-8 pb-4 md:px-24">
         <div class="flex flex-col justify-end lg:justify-center">
           <ErrorBox v-if="!contractChain.supportsIERC721">
             The token does not have any metadata.
