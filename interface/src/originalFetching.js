@@ -14,6 +14,20 @@ const originalTokenQuery = gql`
   }
 `;
 
+// hardcoded contract states that we don't have to check again
+// chain id => contract address (checksum format) => contract state
+const knownContractStates = {
+  1: {
+    "0x2A46f2fFD99e19a89476E2f62270e0a35bBf0756": {
+      // explicit exception for the beeple contract which doesn't support IERC721 properly, but
+      // still can be knocked off
+      hasCode: true,
+      supportsIERC721: true,
+      supportsIERC721Metadata: true,
+    },
+  },
+};
+
 function getOriginalTokenID(chainID, contractAddress, tokenID) {
   return [
     "original",
@@ -58,6 +72,14 @@ function makeNFTContractState() {
 }
 
 async function fetchOriginalContractState(chainID, contractAddress) {
+  contractAddress = ethers.utils.getAddress(contractAddress);
+  if (
+    knownContractStates[chainID] &&
+    knownContractStates[chainID][contractAddress]
+  ) {
+    return knownContractStates[chainID][contractAddress];
+  }
+
   let state = makeNFTContractState();
 
   const provider = providers[chainID];
