@@ -3,7 +3,7 @@
     <div class="px-4 flex justify-center sm:justify-end text-sm sm:text-base">
       <a
         class="h-full py-4 px-4 cursor-pointer font-medium"
-        href="https://medium.com"
+        href="https://medium.com/@a.howitt/49caf8399fee"
       >
         WTF
       </a>
