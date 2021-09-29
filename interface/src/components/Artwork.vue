@@ -1,5 +1,5 @@
 <template>
-  <div class="flex justify-center">
+  <div>
     <ErrorBox v-if="error">
       {{ error.message }}
     </ErrorBox>

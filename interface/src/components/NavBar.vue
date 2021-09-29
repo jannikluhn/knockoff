@@ -10,14 +10,14 @@
 
       <div class="flex justify-right">
         <router-link
-          class="h-full py-4 px-4 cursor-pointer hover:border-b-2 border-blue-500 font-medium"
+          class="h-full py-4 px-4 cursor-pointer hover:border-b-2 border-black font-medium"
           :class="walletSelected ? 'border-b-2' : ''"
           :to="{ name: 'wallet' }"
         >
           Wallet
         </router-link>
         <router-link
-          class="h-full py-4 px-4 cursor-pointer hover:border-b-2 border-blue-500 font-medium"
+          class="h-full py-4 px-4 cursor-pointer hover:border-b-2 border-black font-medium"
           :class="gallerySelected ? 'border-b-2' : ''"
           :to="{ name: 'gallery' }"
         >
