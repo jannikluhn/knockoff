@@ -4,11 +4,11 @@
     tag="div"
     class="w-full aspect-w-4 aspect-h-5 rounded border-2 border-black transform hover:-translate-y-2 hover:shadow cursor-pointer transition"
   >
-    <div>
-      <div class="w-full aspect-w-1 aspect-h-1">
+    <div class="w-full h-full">
+      <div class="w-full h-4/5">
         <img
           v-if="!isVideo"
-          class="w-full h-full overflow-hidden object-cover"
+          class="w-full h-full overflow-hidden object-cover rendering-pixelated rendering-crisp-edges"
           :src="srcURL"
           alt=" "
         />
@@ -21,7 +21,7 @@
           class="object-contain object-center"
         ></video>
       </div>
-      <div class="w-full aspect-w-4 aspect-h-1 pt-2">
+      <div class="w-full h-1/5 pt-2">
         <div class="px-2 flex flex-col justify-center items-center">
           <div class="overflow-hidden">
             <h2 class="text-center font-bold text-xl mb-0.5 leading-5">

@@ -9,7 +9,7 @@
 
     <img
       v-else-if="!isVideo"
-      class="object-contain object-center"
+      class="object-contain object-center w-full rendering-pixelated rendering-crisp-edges"
       :src="srcURL"
       alt=" "
     />
@@ -19,7 +19,7 @@
       loop
       autoplay
       playsinline
-      class="object-contain object-center"
+      class="object-contain object-center w-full"
     ></video>
   </div>
 </template>
