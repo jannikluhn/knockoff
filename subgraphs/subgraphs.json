@@ -64,6 +64,19 @@
           }
         }
       ]
+    },
+    "arbitrum": {
+      "network": "arbitrum-one",
+      "chainID": 42161,
+      "dataSources": [
+        {
+          "partial": "ERC721KnockOffs",
+          "context": {
+            "address": "0xf14140A166652B26D402E899c416c85E189DD645",
+            "startBlock": 10407150
+          }
+        }
+      ]
     }
   }
 }

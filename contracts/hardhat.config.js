@@ -42,5 +42,15 @@ module.exports = {
       chainId: 5,
       accounts: [process.env.DEPLOY_KEY_GOERLI],
     },
+    arbitrumRinkeby: {
+      url: "https://rinkeby.arbitrum.io/rpc",
+      chainId: 421611,
+      accounts: [process.env.DEPLOY_KEY_ARBITRUM_RINKEBY],
+    },
+    arbitrum: {
+      url: "https://arb1.arbitrum.io/rpc",
+      chainId: 42161,
+      accounts: [process.env.DEPLOY_KEY_ARBITRUM],
+    },
   },
 };

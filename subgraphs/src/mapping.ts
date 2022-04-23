@@ -26,6 +26,10 @@ export function handleMinted137(event: Minted): void {
   handleMinted(137, event);
 }
 
+export function handleMinted42161(event: Minted): void {
+  handleMinted(42161, event);
+}
+
 function getContractID(
   prefix: string,
   chainID: i32,

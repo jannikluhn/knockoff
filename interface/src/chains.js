@@ -30,6 +30,15 @@ export const chains = {
     graphUrl:
       "https://api.thegraph.com/subgraphs/name/jannikluhn/knockoffs-matic",
   },
+  42161: {
+    name: "Arbitrum",
+    pathSegment: "arbitrum",
+    chainID: 42161,
+    erc721KnockOffsAddress: "0xf14140A166652B26D402E899c416c85E189DD645",
+    providerUrl: "https://arb1.arbitrum.io/rpc",
+    graphUrl:
+      "https://api.thegraph.com/subgraphs/name/jannikluhn/knockoffs-arbitrum",
+  },
 };
 
 export const chainNames = Object.fromEntries(
